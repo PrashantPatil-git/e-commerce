@@ -1,7 +1,13 @@
 // Import the User model defined in models/User.js
 const User = require("../models/user");
 const { createToken } = require("../authentication/getToken");
-const { hashPassword } = require("../authentication/encrypt");
+const { hashPassword } = require("../utils/encrypt");
+
+// import email related services
+const { validateEmail, sendWelcomeEmail } = require("./mailServices");
+
+// import utils methods
+const { capitalize } = require("../utils/capitalize");
 
 // import module to encrypt the user passwords
 const bcrypt = require("bcrypt"); // For password hashing
@@ -10,16 +16,42 @@ const bcrypt = require("bcrypt"); // For password hashing
 async function createUser(req) {
   // validate the credentials
 
-  const { email, firstName, lastName, passWord, mobileNumber, profileUrl } =
+  let { email, firstName, lastName, passWord, mobileNumber, profileUrl } =
     req.body;
+
+  // validate email
+  const emailValidationResult = await validateEmail(email);
+  console.log(emailValidationResult);
+
+  // if email is not valid, return message as email is not valid
+  if (!emailValidationResult) {
+    return {
+      success: false,
+      message: "Invalid email address",
+    };
+  }
+  // validate mobileNumber if exists
+
+  // validate address if exists
+
+  // capitalize firstName , lastName
+
+  firstName = await capitalize(firstName);
+  lastName = await capitalize(lastName);
 
   try {
     // verify whether user already exists or not
     const existingUser = await User.findOne({ where: { email: email } });
 
     if (existingUser) {
-      return { success: false, message: "User with this email already exists" };
+      return {
+        success: false,
+        message: "User with this email already exists",
+      };
     }
+
+    // instead of storing the plain text password in database
+    // encrypt a password using a hashing function and stored
 
     const hashedPassword = await hashPassword(passWord);
 
@@ -34,6 +66,9 @@ async function createUser(req) {
       profileUrl,
     });
 
+    // send the welcome email to the user
+    sendWelcomeEmail(email, firstName, lastName);
+
     return {
       success: true,
       message: "User registered successfully",
@@ -41,7 +76,6 @@ async function createUser(req) {
     };
   } catch (error) {
     // Handle any errors that occur during user creation
-
     console.log(error);
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new Error(error.errors[0].message);
@@ -77,6 +111,8 @@ async function loginUser(email, passWord) {
     throw new Error(error.message);
   }
 }
+
+// export user services
 
 module.exports = {
   createUser,
