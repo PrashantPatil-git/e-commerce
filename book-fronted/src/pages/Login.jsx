@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 //import back from "../img/back2.jpg";
 import User from "../model/User";
 import userService from "../service/user.service";
+
 import { setCurrentUser } from "../store/action/user.action";
+
 const Login = () => {
   const [user, setUser] = useState(
     new User("", "", "", "", "", "", "", "", "", "", "")
@@ -16,7 +18,7 @@ const Login = () => {
 
   const [login, userLogin] = useState({
     email: "",
-    password: "",
+    passWord: "",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,29 +42,26 @@ const Login = () => {
   }, []);
 
   const loginSubmit = (e) => {
-
     e.preventDefault();
-    // userService
-    //   .login(login)
-    //   .then((res) => {
-    //     //setUser(res.data);
+    userService
+      .login(login)
+      .then((res) => {
+        console.log(res);
 
-        dispatch(setCurrentUser({name:"Rushi",password:"Rushi"}));
+        // save jwt token in local storage
+        localStorage.setItem("token", res.data.token);
+
+        dispatch(setCurrentUser({ name: res.data.user.firstName }));
+        setUser(res.data);
+
+        // navigate to the home page after user logs in successfully
         navigate("/");
+      })
+      .catch((error) => {
+        setMessage("invalid email and password");
 
-        //  console.log(res.data.role);
-
-        // if (res.data.role[0].id === 101) {
-        //   navigate("/admin/home");
-        // } else {
-        //   navigate("/");
-        // }
-      //})
-     // .catch((error) => {
-      //  setMessage("invalid email and password");
-
-      //  console.log(error);
-    //  });
+        console.log(error);
+      });
   };
 
   return (
@@ -105,7 +104,7 @@ const Login = () => {
                     type="password"
                     className="form-control"
                     onChange={(e) => handleChange(e)}
-                    name="password"
+                    name="passWord"
                   />
                 </div>
 

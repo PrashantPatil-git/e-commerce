@@ -1,22 +1,19 @@
 import axios from "axios";
 import { BASE_API_URL } from "../common/constant";
-import { AuthHeader } from "./auth.header";
 
-const API_URL = BASE_API_URL + "/api/auth"
+const API_URL = BASE_API_URL + "/authenticate";
 
 class userService {
-    register(user) {
+  register(user) {
+    return axios.post(API_URL + "/user/signup", user);
+  }
 
-        return axios.post(API_URL + "/register", user);
-    }
-
-    login(user) {
-        return axios.post(API_URL + "/login", user);
-    }
-    updateProfile(user) {
-        return axios.post(API_URL + "/updateProfile", user, { headers: AuthHeader() });
-    }
-
+  login(user) {
+    return axios.post(API_URL + "/user/login", {
+      email: user.email,
+      passWord: user.passWord,
+    });
+  }
 }
 
 export default new userService();
