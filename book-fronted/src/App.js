@@ -7,11 +7,14 @@ import { ViewBook } from './pages/ViewBook';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Cart } from './pages/user/Cart';
+import EditProfile from './pages/user/EditProfile'
+import Orders from './pages/user/Orders';
 /*import { Home } from './pages/Home';
 
 
 */
 import "react-toastify/dist/ReactToastify.css";
+
 
 
 function App() {
@@ -26,13 +29,11 @@ function App() {
       <Route path='/login' element={<Login />}></Route>
       <Route path='/signup' element={<Signup />}></Route>
       <Route path='/cart' element={<Cart />}></Route>
+      <Route path='/EditProfile' element={<EditProfile />}></Route>
+      <Route path='/orders' element={<Orders />}></Route>
 
-        {/*
-        
-        <Route path='/books' element={<Books />}></Route>
-        
-        
-         */}
+
+       
 
         
 

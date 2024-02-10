@@ -48,7 +48,7 @@ const Navbar = () => {
                                 <Link to="/home" className="nav-link active" aria-current="page" >Home</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/books" className="nav-link" >Books</Link>
+                               
                             </li>
                             {/* <li className="search-form">
                                 <form className="d-flex">
@@ -61,6 +61,7 @@ const Navbar = () => {
                         </ul>
 
                         {
+                            // if user is not logged in then rendor this code
                             !loginUser &&
 
                             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -74,7 +75,8 @@ const Navbar = () => {
                             </ul>
                         }
 
-                        {
+                        { 
+                            // if user is already logged in then rendor this code
                             loginUser &&
                             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
 
