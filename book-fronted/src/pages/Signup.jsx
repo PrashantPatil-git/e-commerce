@@ -6,23 +6,35 @@ import User from "../model/User";
 import userService from "../service/user.service";
 //import { signupUpSchema } from "../schemas";
 import { toast, ToastContainer } from "react-toastify";
+
+import { useDispatch, useSelector } from "react-redux";
+
+// to change the state (current authenticated user)
+import { setCurrentUser } from "../store/action/user.action";
+
 const initialValues = {
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
-  password: "",
-  mobNo: "",
+  passWord: "",
+  mobileNumber: "",
   address: "",
   city: "",
   state: "",
   pincode: "",
+  confirmPassWord: "",
 };
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const loginUser = useSelector((u) => u.user);
+
   const [user, setUser] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    password: "",
-    mobNo: "",
+    passWord: "",
+    mobileNumber: "",
     address: "",
     city: "",
     state: "",
@@ -51,15 +63,25 @@ const Signup = () => {
         console.log(values);
         userService
           .register(values)
-          .then(() => {
-            notify("Register sucessfully");
-            //setUser(user);
-            navigate("/signup");
+          .then((data) => {
+            const navigateToHomePageTimeout = setTimeout(() => {
+              navigate("/");
+            }, 2000);
+
+            notify("SUCCESS", "Register sucessfully");
+            // save jwt token in local storage
+            // set the JWT token for authenticated user
+            localStorage.setItem("token", data.token);
+
+            // set the current authenticated user as new registered user using dispatcher of react-redux
+            dispatch(setCurrentUser({ user: data.user }));
+
+            // clear the time out settled for before navigate to home page
           })
           .catch((error) => {
-            // console.log(error);
+            console.log(error);
             if (error.response?.status === 409) {
-              notify("Email id already exist");
+              notify("FAILURE", "Email id already exist");
               navigate("/signup");
             }
           });
@@ -67,18 +89,29 @@ const Signup = () => {
         action.resetForm();
       },
     });
-  
-    
-  const notify = (msg) => {
-    toast.success(msg, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+
+  const notify = (type, msg) => {
+    if (type === "FAILURE") {
+      toast.failure(msg, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (type === "SUCCESS") {
+      toast.success(msg, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   return (
@@ -103,21 +136,36 @@ const Signup = () => {
                 <p className="fs-4 text-danger text-center">{errorMsg}</p>
               )}
             </div>
+
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col">
-                    <label>Full Name</label>
+                    <label>First Name</label>
                     <input
                       type="text"
-                      name="name"
+                      name="firstName"
                       className="form-control form-control-sm"
-                      value={values.name}
+                      value={values.firstName}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.name && touched.name ? (
-                      <p className="text-danger">{errors.name}</p>
+                    {errors.firstName && touched.firstName ? (
+                      <p className="text-danger">{errors.firstName}</p>
+                    ) : null}
+                  </div>
+                  <div className="col">
+                    <label>Last Name</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      className="form-control form-control-sm"
+                      value={values.lastName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {errors.lastName && touched.lastName ? (
+                      <p className="text-danger">{errors.lastName}</p>
                     ) : null}
                   </div>
                 </div>
@@ -139,15 +187,15 @@ const Signup = () => {
                   <div className="col">
                     <label>Mobile No</label>
                     <input
-                      type="number"
-                      name="mobNo"
+                      type="string"
+                      name="mobileNumber"
                       className="form-control form-control-sm"
-                      value={values.mobNo}
+                      value={values.mobileNumber}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.mobNo && touched.mobNo ? (
-                      <p className="text-danger">{errors.mobNo}</p>
+                    {errors.mobileNumber && touched.mobileNumber ? (
+                      <p className="text-danger">{errors.mobileNumber}</p>
                     ) : null}
                   </div>
                 </div>
@@ -157,15 +205,15 @@ const Signup = () => {
                     <label>Password</label>
                     <input
                       type="text"
-                      name="password"
+                      name="passWord"
                       id="psw"
                       className="form-control form-control-sm"
-                      value={values.password}
+                      value={values.passWord}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.password && touched.password ? (
-                      <p className="text-danger">{errors.password}</p>
+                    {errors.passWord && touched.passWord ? (
+                      <p className="text-danger">{errors.passWord}</p>
                     ) : null}
                   </div>
                   <div className="col">
@@ -184,6 +232,9 @@ const Signup = () => {
                   </div>
                 </div>
 
+                {/* Address related input tags */}
+
+                {/* 
                 <div className="form-group mt-3">
                   <label>Address</label>
                   <textarea
@@ -246,8 +297,14 @@ const Signup = () => {
                   </div>
                 </div>
 
+
+              */}
                 <div className="text-center mt-3">
-                  <button className="btn btn-primary col-md-12">
+                  <button
+                    type="submit"
+                    className="btn btn-primary col-md-12"
+                    onSubmit={handleSubmit}
+                  >
                     Register
                   </button>
                 </div>
@@ -268,7 +325,6 @@ const Signup = () => {
         pauseOnHover
       />
     </div>
-    
   );
 };
 

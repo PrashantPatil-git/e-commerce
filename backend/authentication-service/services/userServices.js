@@ -36,6 +36,11 @@ async function createUser(req) {
 
   // capitalize firstName , lastName
 
+  // profile url
+  if (profileUrl === undefined) {
+    profileUrl = null;
+  }
+
   firstName = await capitalize(firstName);
   lastName = await capitalize(lastName);
 

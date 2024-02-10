@@ -51,8 +51,7 @@ const Login = () => {
         // save jwt token in local storage
         localStorage.setItem("token", res.data.token);
 
-        dispatch(setCurrentUser({ name: res.data.user.firstName }));
-        setUser(res.data);
+        dispatch(setCurrentUser({ user: res.data.user }));
 
         // navigate to the home page after user logs in successfully
         navigate("/");

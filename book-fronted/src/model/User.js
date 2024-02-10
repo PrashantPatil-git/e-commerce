@@ -6,6 +6,7 @@ export default class User {
     email,
     passWord,
     mobileNumber,
+    profileUrl,
     address,
     city,
     state,
@@ -18,6 +19,7 @@ export default class User {
     this.email = email;
     this.passWord = passWord;
     this.mobileNumber = mobileNumber;
+    this.profileUrl = profileUrl;
     this.address = address;
     this.city = city;
     this.state = state;
