@@ -32,8 +32,11 @@ const User = sequelize.define("User", {
   },
   mobileNumber: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  profileUrl: {
+    type: DataTypes.STRING,
     allowNull: true,
-    unique: true,
   },
 });
 

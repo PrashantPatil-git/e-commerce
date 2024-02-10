@@ -1,6 +1,10 @@
 // Import the User model defined in models/User.js
 const User = require("../models/user");
 const { createToken } = require("../authentication/getToken");
+const { hashPassword } = require("../authentication/encrypt");
+
+// import module to encrypt the user passwords
+const bcrypt = require("bcrypt"); // For password hashing
 
 // Controller or Service function to create a new user
 async function createUser(req) {
@@ -16,12 +20,15 @@ async function createUser(req) {
       return { success: false, message: "User with this email already exists" };
     }
 
+    const hashedPassword = await hashPassword(passWord);
+
     // Create a new user object
+
     const newUser = await User.create({
       email,
       firstName,
       lastName,
-      passWord,
+      passWord: hashedPassword,
       mobileNumber,
     });
 
@@ -52,16 +59,18 @@ async function loginUser(email, passWord) {
       where: { email: email },
     });
 
+    const isPasswordValid = await bcrypt.compare(passWord, user.passWord);
+
     // Check if user exists and if password matches
-    if (!user || user.passWord !== passWord) {
+    if (!user || !isPasswordValid) {
       throw new Error("Invalid email or password");
     }
 
-    const token = await createToken(user);
+    const token = await createToken(user.userId);
     // return user and token
     return { user, token };
   } catch (error) {
-    console.log("user while login user : " + error);
+    console.log("error while login user : " + error);
     throw new Error(error.message);
   }
 }

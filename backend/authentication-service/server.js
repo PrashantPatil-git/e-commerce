@@ -10,8 +10,6 @@ const cors = require("cors");
 
 const apiRoute = require("./routes/apiRoute.js");
 
-const PORT = 3000;
-
 // creating instance of express
 const app = express();
 
@@ -34,6 +32,6 @@ app.get("/", (req, res) => {
 });
 
 // app started on listening on this port
-app.listen(PORT || process.env.PORT, () => {
-  console.log(`server started on http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`server started on http://localhost:${process.env.PORT}`);
 });

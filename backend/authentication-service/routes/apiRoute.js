@@ -1,13 +1,18 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
-// const { verifyJWT } = require("../authentication/verifyToken");
+const adminController = require("../controllers/adminController");
 
-// endpoints under user controller
-// all the endpoints which are come under user route
+const { verifyJWT } = require("../authentication/verifyToken");
+
+// user routes
 
 router.post("/user/signup", userController.registerUser);
 
 router.post("/user/login", userController.authenticateUser);
+
+// admin related routes
+
+router.post("/admin/login", adminController.authenticateAdmin);
 
 // export the express router
 module.exports = router;

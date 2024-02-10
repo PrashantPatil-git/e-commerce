@@ -23,13 +23,14 @@ exports.registerUser = async (req, res) => {
 
     // new user created , create jwt token and return
 
-    const token = await createToken(registrationResult.user);
+    const token = await createToken(registrationResult.user.userId);
     return res.status(201).json({
       message: registrationResult.message,
       user: registrationResult.user,
       token: token,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       error: "Unable to create user",
       message: error.message,
