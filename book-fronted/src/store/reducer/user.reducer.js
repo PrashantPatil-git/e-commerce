@@ -9,7 +9,9 @@ const userReducer = (state = {}, action) => {
             return action?.payload;
 
         case CLEAR_CURRENT_USER:
+            console.log("user removing");
             localStorage.removeItem('loginUser');
+            console.log("user removed");
             return null;
         default:
             return JSON.parse(localStorage.getItem('loginUser'));
