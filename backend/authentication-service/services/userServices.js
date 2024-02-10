@@ -10,7 +10,8 @@ const bcrypt = require("bcrypt"); // For password hashing
 async function createUser(req) {
   // validate the credentials
 
-  const { email, firstName, lastName, passWord, mobileNumber } = req.body;
+  const { email, firstName, lastName, passWord, mobileNumber, profileUrl } =
+    req.body;
 
   try {
     // verify whether user already exists or not
@@ -30,6 +31,7 @@ async function createUser(req) {
       lastName,
       passWord: hashedPassword,
       mobileNumber,
+      profileUrl,
     });
 
     return {
@@ -40,6 +42,7 @@ async function createUser(req) {
   } catch (error) {
     // Handle any errors that occur during user creation
 
+    console.log(error);
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new Error(error.errors[0].message);
     }
