@@ -1,5 +1,10 @@
 import { NavLink } from "react-bootstrap";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import '@fortawesome/fontawesome-free/css/all.css';
+
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -90,8 +95,8 @@ const Navbar = () => {
                       Signup
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link to="/sellerRegister" className="nav-link">
+                  <li className="nav-item btn btn-outline-warning" >
+                    <Link to="/sellerRegister" className="nav-link active" >
                       Become a seller
                     </Link>
                   </li>
