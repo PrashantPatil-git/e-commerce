@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import User from "../../model/User";
 import sellerService from "../../service/seller.service";
 
-
 import { toast, ToastContainer } from "react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -14,25 +13,17 @@ import { useDispatch, useSelector } from "react-redux";
 // to change the state (current authenticated user)
 import { setCurrentUser } from "../../store/action/user.action";
 
-
 const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
-  panCard: "",
+  panNumber: "",
   passWord: "",
   mobileNumber: "",
-  address: "",
-  city: "",
-  state: "",
-  pincode: "",
   confirmPassWord: "",
 };
 
-
 const SellerRegister = () => {
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,7 +33,7 @@ const SellerRegister = () => {
     firstName: "",
     lastName: "",
     email: "",
-    panCard: "",
+    panNumber: "",
     passWord: "",
     mobileNumber: "",
     address: "",
@@ -53,7 +44,6 @@ const SellerRegister = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [succMsg, setSuccMsg] = useState("");
-
 
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
@@ -73,26 +63,22 @@ const SellerRegister = () => {
         console.log(values);
         sellerService
           .register(values)
-          .then((data) => {
+          .then((res) => {
             const navigateToHomePageTimeout = setTimeout(() => {
-              // after successfully login register navigate to the home page of seller 
-              navigate("/sellerHome");
+              // after successfully login register navigate to the home page of seller
+              navigate("/");
             }, 2000);
 
-            notify("SUCCESS", "Register sucessfully");
-            // save jwt token in local storage
-            // set the JWT token for authenticated user
-            localStorage.setItem("token", data.data.token);
-
+            notify(res.data.message);
             // set the current authenticated user as new registered user using dispatcher of react-redux
-            dispatch(setCurrentUser({ user: data.data.user }));
+            // dispatch(setCurrentUser({ user: data.data.user }));
 
             // clear the time out settled for before navigate to home page
           })
           .catch((error) => {
             console.log(error);
             if (error.response?.status === 409) {
-              notify("FAILURE", "Email id already exist");
+              notify("Email id already exist");
               navigate("/sellerRegister");
             }
           });
@@ -101,12 +87,10 @@ const SellerRegister = () => {
       },
     });
 
-  const notify = (type, msg) => {
-
-
+  const notify = (msg) => {
     toast.success(msg, {
       position: "top-center",
-      autoClose: 2000,
+      autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -186,24 +170,20 @@ const SellerRegister = () => {
                     ) : null}
                   </div>
 
-
-
                   <div className="col">
                     <label>Pan Card </label>
                     <input
                       type="string"
-                      name="panCard"
+                      name="panNumber"
                       className="form-control form-control-sm"
-                      value={values.panCard}
+                      value={values.panNumber}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.panCard && touched.panCard ? (
-                      <p className="text-danger">{errors.panCard}</p>
+                    {errors.panNumber && touched.panNumber ? (
+                      <p className="text-danger">{errors.panNumber}</p>
                     ) : null}
                   </div>
-
-
 
                   <div className="col">
                     <label>Mobile No</label>
@@ -253,28 +233,29 @@ const SellerRegister = () => {
                   </div>
                 </div>
 
-
-
-
-
                 <div className="row">
                   <div className="col-md-6">
                     <div className="text-center mt-3">
                       {/* Use Link component with "to" prop to specify the target route */}
-                      <Link to="/sellerLogin" className="btn btn-primary col-md-12">
+                      <Link
+                        to="/sellerLogin"
+                        className="btn btn-primary col-md-12"
+                      >
                         Login
                       </Link>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="text-center mt-3">
-                      <button type="submit" className="btn btn-primary col-md-12">
+                      <button
+                        type="submit"
+                        className="btn btn-primary col-md-12"
+                      >
                         Register
                       </button>
                     </div>
                   </div>
                 </div>
-
               </form>
             </div>
           </div>
