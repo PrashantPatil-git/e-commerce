@@ -41,7 +41,8 @@ const EditProfile = () => {
     userService
       .updateProfile(user)
       .then((res) => {
-        dispatch(setCurrentUser(user));
+        // sroring the updated user 
+        dispatch(setCurrentUser(res.user));
         notify();
       })
       .catch((error) => {

@@ -8,7 +8,10 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Cart } from './pages/user/Cart';
 import EditProfile from './pages/user/EditProfile'
+
 import Orders from './pages/user/Orders';
+import {SellerRegister} from './pages/seller/SellerRegister'
+import SellerHome from './pages/seller/SellerHome';
 /*import { Home } from './pages/Home';
 
 
@@ -31,6 +34,10 @@ function App() {
       <Route path='/cart' element={<Cart />}></Route>
       <Route path='/EditProfile' element={<EditProfile />}></Route>
       <Route path='/orders' element={<Orders />}></Route>
+      <Route path='/sellerRegister' element={<SellerRegister />}></Route>
+      <Route path='/sellerHome' element={<SellerHome />}></Route>
+
+
 
 
        

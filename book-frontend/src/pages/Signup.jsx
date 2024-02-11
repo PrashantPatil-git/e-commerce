@@ -68,20 +68,20 @@ const Signup = () => {
               navigate("/");
             }, 2000);
 
-            notify("SUCCESS", "Register sucessfully");
+            notify("Register sucessfully");
             // save jwt token in local storage
             // set the JWT token for authenticated user
-            localStorage.setItem("token", data.token);
+            localStorage.setItem("token", data.data.token);
 
             // set the current authenticated user as new registered user using dispatcher of react-redux
-            dispatch(setCurrentUser({ user: data.user }));
+            dispatch(setCurrentUser({ user: data.data.user }));
 
             // clear the time out settled for before navigate to home page
           })
           .catch((error) => {
             console.log(error);
             if (error.response?.status === 409) {
-              notify("FAILURE", "Email id already exist");
+              notify("Email id already exist");
               navigate("/signup");
             }
           });
@@ -90,28 +90,17 @@ const Signup = () => {
       },
     });
 
-  const notify = (type, msg) => {
-    if (type === "FAILURE") {
-      toast.failure(msg, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else if (type === "SUCCESS") {
-      toast.success(msg, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
+  const notify = (msg) => {
+
+    toast.success(msg, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
   };
 
   return (
@@ -303,7 +292,6 @@ const Signup = () => {
                   <button
                     type="submit"
                     className="btn btn-primary col-md-12"
-                    onSubmit={handleSubmit}
                   >
                     Register
                   </button>

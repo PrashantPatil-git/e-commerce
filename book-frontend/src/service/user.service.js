@@ -24,6 +24,12 @@ class userService {
       passWord: user.passWord,
     });
   }
+
+  updateprofile(user){
+
+    
+
+  }
 }
 
 export default new userService();

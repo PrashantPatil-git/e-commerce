@@ -10,6 +10,7 @@ import { clearCurrentUser } from "../../store/action/user.action";
 import cartService from "../../service/cart.service";
 import { useEffect, useState } from "react";
 
+
 const Navbar = () => {
   const loginUser = useSelector((u) => u.user);
   const dispatch = useDispatch();
@@ -87,6 +88,11 @@ const Navbar = () => {
                   <li className="nav-item">
                     <Link to="/signup" className="nav-link">
                       Signup
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/sellerRegister" className="nav-link">
+                      Become a seller
                     </Link>
                   </li>
                 </ul>

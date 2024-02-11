@@ -3,6 +3,7 @@ export default class User {
     userId,
     firstName,
     lastName,
+    panCard,
     email,
     passWord,
     mobileNumber,
@@ -17,6 +18,7 @@ export default class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.panCard = panCard;
     this.passWord = passWord;
     this.mobileNumber = mobileNumber;
     this.profileUrl = profileUrl;
