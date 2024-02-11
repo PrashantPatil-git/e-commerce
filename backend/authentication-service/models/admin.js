@@ -22,7 +22,7 @@ const Admin = sequelize.define("Admin", {
 });
 
 // Create the Admin table in the database
-Admin.sync()
+Admin.sync({ alter: true })
   .then(() => console.log("Admin table created successfully"))
   .catch((err) => console.error("Error creating Admin table:", err));
 
