@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import User from "../../model/User";
 import sellerService from "../../service/seller.service";
@@ -8,17 +9,17 @@ import sellerService from "../../service/seller.service";
 
 import { toast, ToastContainer } from "react-toastify";
 
-import { useDispatch ,useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // to change the state (current authenticated user)
-import { setCurrentUser } from "../../store/action/user.action";  
+import { setCurrentUser } from "../../store/action/user.action";
 
 
 const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
-  panCard:"",
+  panCard: "",
   passWord: "",
   mobileNumber: "",
   address: "",
@@ -34,14 +35,14 @@ const SellerRegister = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const loginUser = useSelector((u) => u.user);
 
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    panCard:"",
+    panCard: "",
     passWord: "",
     mobileNumber: "",
     address: "",
@@ -52,7 +53,7 @@ const SellerRegister = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [succMsg, setSuccMsg] = useState("");
-  
+
 
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
@@ -104,14 +105,14 @@ const SellerRegister = () => {
 
 
     toast.success(msg, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -203,7 +204,7 @@ const SellerRegister = () => {
                   </div>
 
 
-                  
+
                   <div className="col">
                     <label>Mobile No</label>
                     <input
@@ -252,15 +253,28 @@ const SellerRegister = () => {
                   </div>
                 </div>
 
-             
-                <div className="text-center mt-3">
-                  <button
-                    type="submit"
-                    className="btn btn-primary col-md-12"
-                  >
-                    Register
-                  </button>
+
+
+
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="text-center mt-3">
+                      {/* Use Link component with "to" prop to specify the target route */}
+                      <Link to="/sellerLogin" className="btn btn-primary col-md-12">
+                        Login
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="text-center mt-3">
+                      <button type="submit" className="btn btn-primary col-md-12">
+                        Register
+                      </button>
+                    </div>
+                  </div>
                 </div>
+
               </form>
             </div>
           </div>
