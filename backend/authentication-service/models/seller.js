@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
 // Define the Seller model
-const Seller = sequelize.define("Seller", {
+const Seller = sequelize.define("sellers", {
   sellerId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
