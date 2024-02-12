@@ -3,7 +3,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/db"); // import configured sequelize
 
-const Admin = sequelize.define("Admin", {
+const Admin = sequelize.define("admins", {
   adminId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
