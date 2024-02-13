@@ -1,4 +1,5 @@
 const { createToken } = require("../authentication/getToken");
+const { validateToken } = require("../authentication/validateToken");
 const { createUser, loginUser } = require("../services/userServices");
 
 // endpoint register the user in the system
@@ -56,5 +57,26 @@ exports.authenticateUser = async (req, res) => {
     // Handle any errors that occur during login
     console.error("Error during login:", error);
     return res.status(401).json({ error: "Login failed: " + error.message });
+  }
+};
+
+exports.validateUserToken = async (req, res) => {
+  // validate the token here
+
+  try {
+    const validateTokenResponse = await validateToken(req);
+
+    console.log(validateTokenResponse);
+
+    if (validateTokenResponse.success) {
+      return res
+        .status(200)
+        .send({ userId: parseInt(validateTokenResponse.id) });
+    } else {
+      return res.status(401).send({ message: validateTokenResponse.message });
+    }
+  } catch (error) {
+    console.log("error while validating user");
+    return res.status(401).send({ message: "error while validating user" });
   }
 };
