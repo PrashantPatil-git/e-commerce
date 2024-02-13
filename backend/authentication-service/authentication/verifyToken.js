@@ -5,16 +5,16 @@ const jwt = require("jsonwebtoken");
 const verifyJWT = async (req, res, next) => {
   const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-  const token = req.header("token");
+  const jwtToken = req.header("Authorization");
 
-  if (!token) {
+  if (!jwtToken) {
     return res
       .status(404)
       .send({ message: "Access denied, JWT token required" });
   }
 
   // Remove 'Bearer ' prefix from token
-  const tokenWithoutPrefix = token.replace("Bearer ", "");
+  const tokenWithoutPrefix = jwtToken.replace("Bearer ", "");
 
   try {
     const user = jwt.verify(tokenWithoutPrefix, JWT_SECRET_KEY);
