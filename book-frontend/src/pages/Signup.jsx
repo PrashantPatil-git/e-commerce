@@ -91,16 +91,15 @@ const Signup = () => {
     });
 
   const notify = (msg) => {
-
     toast.success(msg, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -289,10 +288,7 @@ const Signup = () => {
 
               */}
                 <div className="text-center mt-3">
-                  <button
-                    type="submit"
-                    className="btn btn-primary col-md-12"
-                  >
+                  <button type="submit" className="btn btn-primary col-md-12">
                     Register
                   </button>
                 </div>

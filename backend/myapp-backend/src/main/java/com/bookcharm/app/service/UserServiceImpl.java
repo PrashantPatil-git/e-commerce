@@ -46,9 +46,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public RegistrationResponse createUser(UserRegistrationDto userRegistrationDto) {
 
-        try{
-
-
 
         // validate mobile number
 
@@ -101,16 +98,17 @@ public class UserServiceImpl implements UserService {
             // send email to user
 
             // .subscribe() allows us to send non-blocking request to the another server
-            mailServiceWebClient.post().uri("/user/send-welcome").body(BodyInserters.fromValue(newUser)).retrieve().bodyToMono(Void.class).subscribe(response -> System.out.println(response), error -> System.out.println(error));
+            try{
+                mailServiceWebClient.post().uri("/user/send-welcome").body(BodyInserters.fromValue(newUser)).retrieve().bodyToMono(Void.class).subscribe(response -> System.out.println(response), error -> System.out.println(error));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 
             return new RegistrationResponse(newUser, registrationApiResponse.getToken());
 
         }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
-        return new RegistrationResponse();
     }
 
     // authenticate (login) of user
@@ -121,7 +119,7 @@ public class UserServiceImpl implements UserService {
         // find whether user with email exists or not
 
         String email = userLoginDto.getEmail();
-        String password = userLoginDto.getPassword();
+        String password = userLoginDto.getPassWord();
 
         // if user not exists
         // return error with message "user not exists with this email"
@@ -140,7 +138,7 @@ public class UserServiceImpl implements UserService {
             LoginValidationDto loginValidationDto = new LoginValidationDto();
             loginValidationDto.setUserId(user.getUserId());
             loginValidationDto.setUserPassword(user.getPassWord());
-            loginValidationDto.setValidationPassword(userLoginDto.getPassword());
+            loginValidationDto.setValidationPassword(userLoginDto.getPassWord());
 
             String jwtToken = authenticationServiceWebClient.post().uri("/user/login").body(BodyInserters.fromValue(loginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(LoginResponse.class).map(LoginResponse::getToken).block();
             // if everything is fine return response
