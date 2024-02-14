@@ -1,8 +1,8 @@
 package com.bookcharm.app.controller;
-import com.bookcharm.app.dto.CartDto;
-import com.bookcharm.app.dto.RegistrationResponse;
-import com.bookcharm.app.dto.UserRegistrationDto;
+import com.bookcharm.app.dto.*;
+import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +27,21 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto){
+
+        try{
+            LoginResponse loginResponse =  userService.loginUser(userLoginDto);
+            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
+            
+        }catch (UserNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found " + ex.getMessage());
+        }catch (AuthenticationFailedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
+        }
+
     }
 
     @PostMapping

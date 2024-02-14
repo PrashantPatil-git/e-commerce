@@ -44,14 +44,12 @@ exports.authenticateUser = async (req, res) => {
   // if not then return , status code not found
   // else return jwt token, user
 
-  const { email, passWord } = req.body;
-
   try {
     // Call the loginUser function from the authService
-    const { user, token } = await loginUser(email, passWord);
+    const { token } = await loginUser(req);
 
     // Return a success response with the user object and token
-    return res.status(200).json({ user, token });
+    return res.status(200).json({ token: token });
   } catch (error) {
     // Handle any errors that occur during login
     console.error("Error during login:", error);

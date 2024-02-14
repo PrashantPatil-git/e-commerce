@@ -17,7 +17,7 @@ async function createUser(req) {
   let { email, firstName, lastName, passWord, mobileNumber, profileUrl } =
     req.body;
 
-  console.log(email);
+  console.log(email, passWord);
   // validate email
   const emailValidationResult = await validateEmail(email);
   console.log(emailValidationResult);
@@ -82,23 +82,35 @@ async function createUser(req) {
 
 // service function to allow user to login into the system
 
-async function loginUser(email, passWord) {
+async function loginUser(req) {
+  // access all the fields required
+
+  // email is validated in core application
+  const { userId, userPassword, validationPassword } = req.body;
+
   // find user with email and passWord
   // if not return error
   // else return JWT, and user
-  // try {
-  //   const isPasswordValid = await bcrypt.compare(passWord, passWord);
-  //   // Check if user exists and if password matches
-  //   if (!isPasswordValid) {
-  //     throw new Error("Invalid email or password");
-  //   }
-  //   // const token = await createToken(useruserId);
-  //   // return user and token
-  //   return { token };
-  // } catch (error) {
-  //   console.log("error while login user : " + error);
-  //   throw new Error(error.message);
-  // }
+  try {
+    const isPasswordValid = await bcrypt.compare(
+      validationPassword,
+      userPassword
+    );
+
+    //   // Check if user exists and if password matches
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
+
+    const token = await createToken(userId);
+
+    console.log(token);
+    // return token
+    return { token };
+  } catch (error) {
+    console.log("error while login user : " + error);
+    throw new Error(error.message);
+  }
 }
 
 // export user services

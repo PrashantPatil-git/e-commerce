@@ -1,10 +1,7 @@
 package com.bookcharm.app.service;
 
-import com.bookcharm.app.dto.RegistrationApiResponse;
-import com.bookcharm.app.dto.RegistrationResponse;
-import com.bookcharm.app.dto.UserRegistrationDto;
-import com.bookcharm.app.exception.ClientErrorException;
-import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.dto.*;
+import com.bookcharm.app.exception.*;
 import com.bookcharm.app.model.ShoppingCart;
 import com.bookcharm.app.model.User;
 import com.bookcharm.app.repository.UserRepository;
@@ -44,8 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    // register the user
+
     @Override
     public RegistrationResponse createUser(UserRegistrationDto userRegistrationDto) {
+
+        try{
+
+
 
         // validate mobile number
 
@@ -103,9 +106,52 @@ public class UserServiceImpl implements UserService {
             return new RegistrationResponse(newUser, registrationApiResponse.getToken());
 
         }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
+        return new RegistrationResponse();
     }
 
+    // authenticate (login) of user
+
+    @Override
+    public LoginResponse loginUser(UserLoginDto userLoginDto){
+
+        // find whether user with email exists or not
+
+        String email = userLoginDto.getEmail();
+        String password = userLoginDto.getPassword();
+
+        // if user not exists
+        // return error with message "user not exists with this email"
+        // if exists
+        // send user for authentication with userLoginDto to compare the passwords and get the token
+        //      if error occured means password didn't match
+        //      else
+        //      send the LoginResponse with (User and token)
+
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if(optionalUser.isPresent()){
+
+            User user = optionalUser.get();
+            LoginValidationDto loginValidationDto = new LoginValidationDto();
+            loginValidationDto.setUserId(user.getUserId());
+            loginValidationDto.setUserPassword(user.getPassWord());
+            loginValidationDto.setValidationPassword(userLoginDto.getPassword());
+
+            String jwtToken = authenticationServiceWebClient.post().uri("/user/login").body(BodyInserters.fromValue(loginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(LoginResponse.class).map(LoginResponse::getToken).block();
+            // if everything is fine return response
+            return new LoginResponse(user, jwtToken);
+
+        }else{
+            // if user not exists
+            throw new UserNotFoundException("User with " + email + " not found");
+        }
+
+    }
 
 
     @Override
@@ -183,6 +229,11 @@ public class UserServiceImpl implements UserService {
 
     // handle client error if, token is invalid throw UnauthorizedAccessException or throw ClientErrorException
     private Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {
+
+        // through an error when user password not matched with passed password
+        if(clientResponse.statusCode().equals(HttpStatus.UNAUTHORIZED)){
+            return Mono.error(new AuthenticationFailedException("password not match"));
+        }
 
         return Mono.error(new ClientErrorException("Client Error: " + clientResponse.statusCode()));
 
