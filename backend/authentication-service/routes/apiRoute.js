@@ -4,7 +4,7 @@ const adminController = require("../controllers/adminController");
 const sellerController = require("../controllers/sellerController");
 // user routes
 
-router.post("/user/signup", userController.registerUser);
+router.post("/user/register", userController.registerUser);
 
 router.post("/user/login", userController.authenticateUser);
 

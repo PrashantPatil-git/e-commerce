@@ -10,10 +10,7 @@ const { createUser, loginUser } = require("../services/userServices");
 
 exports.registerUser = async (req, res) => {
   try {
-    // if user is validated successfully,
-    // then
-    // return the validated user
-    // and jwt token
+    // if user is validated successfully then return the validated user and jwt token
 
     const registrationResult = await createUser(req);
 
@@ -25,10 +22,12 @@ exports.registerUser = async (req, res) => {
     // new user created , create jwt token and return
 
     const token = await createToken(registrationResult.user.userId);
+
+    console.log(registrationResult.user);
+
     return res.status(201).json({
-      message: registrationResult.message,
-      user: registrationResult.user,
       token: token,
+      userRegistrationDto: registrationResult.user,
     });
   } catch (error) {
     console.log(error);

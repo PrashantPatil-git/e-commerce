@@ -9,6 +9,7 @@ const cors = require("cors");
 // importing the routes
 
 const apiRoute = require("./routes/apiRoute.js");
+const mailRoute = require("./routes/mailRoute.js");
 
 // creating instance of express
 const app = express();
@@ -23,6 +24,7 @@ app.use(cors());
 
 // routes
 app.use("/authenticate", apiRoute);
+app.use("/mail", mailRoute);
 
 // home route of api
 app.get("/", (req, res) => {

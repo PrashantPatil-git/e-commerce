@@ -1,28 +1,112 @@
 package com.bookcharm.app.service;
 
-import com.bookcharm.app.model.Product;
+import com.bookcharm.app.dto.RegistrationApiResponse;
+import com.bookcharm.app.dto.RegistrationResponse;
+import com.bookcharm.app.dto.UserRegistrationDto;
+import com.bookcharm.app.exception.ClientErrorException;
+import com.bookcharm.app.exception.EmailAlreadyExistsException;
 import com.bookcharm.app.model.ShoppingCart;
 import com.bookcharm.app.model.User;
 import com.bookcharm.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.Optional; 
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private WebClient.Builder builder;
+
+    final private WebClient authenticationServiceWebClient;
+    final private WebClient mailServiceWebClient;
+
+    public UserServiceImpl(@Value("${url.authentication-service-base-url}") String authenticationServiceBaseUrl, @Value("${url.notification-service-base-url}") String notificationServiceBaseUrl,  WebClient.Builder builder) {
+        this.builder = builder;
+        this.authenticationServiceWebClient = builder.baseUrl(authenticationServiceBaseUrl).build();
+        this.mailServiceWebClient = builder.baseUrl(notificationServiceBaseUrl).build();
+    }
 
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
+
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public RegistrationResponse createUser(UserRegistrationDto userRegistrationDto) {
+
+        // validate mobile number
+
+        Optional<User> optionalUser = userRepository.findByEmail(userRegistrationDto.getEmail());
+
+        if (optionalUser.isPresent()) {
+            // throw error as user with email already exists
+            User user = optionalUser.get();
+
+            throw new EmailAlreadyExistsException("Email address is already in use");
+        } else {
+            // means user with email address does not exists
+            // next steps
+            // validate the user details
+            // email,
+            // call authentication-mail service to create as well as get the User, and token if valid
+
+            RegistrationApiResponse registrationApiResponse = authenticationServiceWebClient.post().uri("/user/register")
+                    .body(BodyInserters.fromValue(userRegistrationDto))
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse))
+                    .bodyToMono(RegistrationApiResponse.class)
+                    .block();
+
+
+            // using registrationApiResponse
+            // create, new User
+            // send , newUser Token
+            // send email to the user for registering on platform using authentication-mail service
+
+
+            UserRegistrationDto newUserRegistrationDto = registrationApiResponse.getUserRegistrationDto();
+            User newUser = new User();
+            newUser.setEmail(newUserRegistrationDto.getEmail());
+            newUser.setFirstName(newUserRegistrationDto.getFirstName());
+            newUser.setLastName(newUserRegistrationDto.getLastName());
+            newUser.setMobileNumber(newUserRegistrationDto.getMobileNumber());
+            newUser.setProfileUrl(newUserRegistrationDto.getProfileUrl());
+            newUser.setPassWord(newUserRegistrationDto.getPassWord());
+
+            // create shopping cart for newUser
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setUser(newUser); // Set the user for the shopping cart
+            newUser.setShoppingCart(shoppingCart); // Set the shopping cart for the user
+
+
+            // persist the user in db
+            newUser = userRepository.save(newUser);
+
+            // send email to user
+
+            // .subscribe() allows us to send non-blocking request to the another server
+            mailServiceWebClient.post().uri("/user/send-welcome").body(BodyInserters.fromValue(newUser)).retrieve().bodyToMono(Void.class).subscribe(response -> System.out.println(response), error -> System.out.println(error));
+
+            return new RegistrationResponse(newUser, registrationApiResponse.getToken());
+
+        }
+
     }
+
+
 
     @Override
     public User updateUser(Long userId, User user) {
@@ -96,4 +180,11 @@ public class UserServiceImpl implements UserService {
 //            userRepository.save(user);
 //        }
 //    }
+
+    // handle client error if, token is invalid throw UnauthorizedAccessException or throw ClientErrorException
+    private Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {
+
+        return Mono.error(new ClientErrorException("Client Error: " + clientResponse.statusCode()));
+
+    }
 }

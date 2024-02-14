@@ -1,5 +1,8 @@
 package com.bookcharm.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,6 +24,7 @@ public class User {
     private String email;
 
     @Column(name = "passWord")
+    @JsonIgnore
     private String passWord;
 
     @Column(name = "mobileNumber")
@@ -29,12 +33,8 @@ public class User {
     @Column(name = "profileUrl")
     private String profileUrl;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShoppingCart shoppingCart;
-
-
-
 
     // Constructors
     public User() {

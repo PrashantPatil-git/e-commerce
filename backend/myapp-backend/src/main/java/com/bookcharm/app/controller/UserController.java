@@ -1,11 +1,16 @@
 package com.bookcharm.app.controller;
 import com.bookcharm.app.dto.CartDto;
+import com.bookcharm.app.dto.RegistrationResponse;
+import com.bookcharm.app.dto.UserRegistrationDto;
+import com.bookcharm.app.exception.EmailAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.bookcharm.app.model.User;
 import com.bookcharm.app.service.UserService;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @RequestMapping("/users")
@@ -25,9 +30,20 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<?> createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+
+        // send a request to authentication-mail service microservice
+
+        try {
+            RegistrationResponse registrationResponse = userService.createUser(userRegistrationDto);
+            return new ResponseEntity<RegistrationResponse>(registrationResponse, HttpStatus.CREATED);
+        }
+        catch (EmailAlreadyExistsException e) {
+            return ResponseEntity.badRequest().body("Email address is already in use");
+        }
+
+
+
     }
 
     @PutMapping("/{userId}")
