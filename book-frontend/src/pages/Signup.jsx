@@ -12,22 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 // to change the state (current authenticated user)
 import { setCurrentUser } from "../store/action/user.action";
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  passWord: "",
-  mobileNumber: "",
-  address: "",
-  city: "",
-  state: "",
-  pincode: "",
-  confirmPassWord: "",
-};
+import { RotatingLines } from "react-loader-spinner";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const loginUser = useSelector((u) => u.user);
 
   const [user, setUser] = useState({
     firstName: "",
@@ -41,19 +29,27 @@ const Signup = () => {
     pincode: "",
   });
 
+  // state for spinner button
+
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [succMsg, setSuccMsg] = useState("");
   const navigate = useNavigate();
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUser((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
+  // reference object for useFormik
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    passWord: "",
+    mobileNumber: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+    confirmPassWord: "",
+  };
 
   const { values, errors, handleChange, handleSubmit, handleBlur, touched } =
     useFormik({
@@ -61,6 +57,10 @@ const Signup = () => {
       //validationSchema: signupUpSchema,
       onSubmit: (values, action) => {
         console.log(values);
+
+        // show spinner
+        setShowSpinner(true);
+
         userService
           .register(values)
           .then((data) => {
@@ -75,20 +75,31 @@ const Signup = () => {
 
             // set the current authenticated user as new registered user using dispatcher of react-redux
             dispatch(setCurrentUser({ user: data.data.user }));
-
+            action.resetForm();
             // clear the time out settled for before navigate to home page
           })
           .catch((error) => {
             console.log(error);
-            if (error.response?.status === 409) {
-              notify("Email id already exist");
-              navigate("/signup");
+            if (error.response?.status === 400) {
+              notifyError(error.response.data);
+              setShowSpinner(false);
             }
           });
-
-        action.resetForm();
       },
     });
+
+  // toast buttons
+  const notifyError = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   const notify = (msg) => {
     toast.success(msg, {
@@ -210,12 +221,12 @@ const Signup = () => {
                       type="text"
                       name="confirmpassword"
                       className="form-control form-control-sm"
-                      value={values.confirmpassword}
+                      value={values.confirmPassWord}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.confirmpassword && touched.confirmpassword ? (
-                      <p className="text-danger">{errors.confirmpassword}</p>
+                    {errors.confirmPassWord && touched.confirmPassWord ? (
+                      <p className="text-danger">{errors.confirmPassWord}</p>
                     ) : null}
                   </div>
                 </div>
@@ -287,11 +298,28 @@ const Signup = () => {
 
 
               */}
-                <div className="text-center mt-3">
-                  <button type="submit" className="btn btn-primary col-md-12">
-                    Register
-                  </button>
-                </div>
+
+                {showSpinner ? (
+                  <div className="text-center mt-3">
+                    <RotatingLines
+                      visible={true}
+                      height="57"
+                      width="57"
+                      color="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      ariaLabel="rotating-lines-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  <div className="text-center mt-3">
+                    <button type="submit" className="btn btn-primary col-md-12">
+                      Register
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </div>

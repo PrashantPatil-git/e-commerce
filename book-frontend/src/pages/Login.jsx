@@ -8,6 +8,9 @@ import userService from "../service/user.service";
 
 import { setCurrentUser } from "../store/action/user.action";
 
+// importing spinner
+import { RotatingLines } from "react-loader-spinner";
+
 const Login = () => {
   const [user, setUser] = useState(
     new User("", "", "", "", "", "", "", "", "", "", "")
@@ -16,10 +19,14 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [logMessage, setLogMessage] = useState("");
 
+  // state for spinner (to show or not)
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const [login, userLogin] = useState({
     email: "",
     passWord: "",
   });
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loginUser = useSelector((u) => u.user);
@@ -43,23 +50,24 @@ const Login = () => {
 
   const loginSubmit = (e) => {
     e.preventDefault();
+    // show spinner (to denote the processing is started)
+    setShowSpinner(true);
     userService
       .login(login)
       .then((res) => {
-        console.log(res);
-
         // save jwt token in local storage
         localStorage.setItem("token", res.data.token);
 
         dispatch(setCurrentUser({ user: res.data.user }));
-
+        // hide the spinner
+        setShowSpinner(false);
         // navigate to the home page after user logs in successfully
         navigate("/");
       })
       .catch((error) => {
         setMessage("invalid email and password");
-
         console.log(error);
+        setShowSpinner(false);
       });
   };
 
@@ -107,9 +115,25 @@ const Login = () => {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary col-md-12">
-                  Login
-                </button>
+                {showSpinner ? (
+                  <div className="text-center mt-3">
+                    <RotatingLines
+                      visible={true}
+                      height="57"
+                      width="57"
+                      color="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      ariaLabel="rotating-lines-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  <button type="submit" className="btn btn-primary col-md-12">
+                    Login
+                  </button>
+                )}
 
                 {/* <div className="text-center p-3">
                   <a href="loadforgotPassword" className="text-decoration-none">
