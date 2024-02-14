@@ -1,12 +1,10 @@
-import store from "../store/store"
+import store from "../store/store";
 
 export const AuthHeader = () => {
-    const loginUser = store.getState().user;
-    //const token = loginUser.token;
+  const token = localStorage.getItem("token");
 
-    return {
-        'Content-Type': 'application/json',
-        //'authorization': 'Bearer ' + token
-    }
-
-}
+  return {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + token,
+  };
+};

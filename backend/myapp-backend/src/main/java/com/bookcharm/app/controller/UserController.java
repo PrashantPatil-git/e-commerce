@@ -12,6 +12,8 @@ import com.bookcharm.app.model.User;
 import com.bookcharm.app.service.UserService;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -61,14 +63,21 @@ public class UserController {
 
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
-        User updatedUser = userService.updateUser(userId, user);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto updateUserDto, HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        System.out.println(token);
+
+
+////        User updatedUser = userService.updateUser(userId, user);
+//        if (updatedUser != null) {
+//            return ResponseEntity.ok(updatedUser);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+
+        return ResponseEntity.ok().body("Reached");
     }
 
     @DeleteMapping("/{userId}")

@@ -89,3 +89,11 @@
 .styled-input:focus {
   border-color: #007bff; /* Change border color on focus */
 }
+
+/* address section styling */
+
+#address-section {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-start; */
+}

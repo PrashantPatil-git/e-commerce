@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BASE_API_URL } from "../common/constant";
 
+import { AuthHeader } from "./auth.header";
+
 const API_URL = BASE_API_URL + "/users";
 
 class userService {
@@ -25,7 +27,22 @@ class userService {
     });
   }
 
-  updateprofile(user) {}
+  // send request to update the user
+  update(user, formData) {
+    return axios.put(
+      API_URL + "/put",
+      {
+        user: user,
+        formData: formData,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the content type to multipart form data
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+  }
 }
 
 export default new userService();

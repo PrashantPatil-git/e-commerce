@@ -25,8 +25,19 @@ const Profile = () => {
     profileUrl: "",
   });
 
+  // state for profile image
+  const [selectedFile, setSelectedFile] = useState(null);
+
   // access the user state
   const loginUser = useSelector((state) => state.user);
+
+  // profile image
+
+  const [image, setImage] = useState(null);
+
+  // state for show address form
+
+  const [showAddressForm, setShowAddressForm] = useState(false);
 
   // to dispatch the redux actions to the reducers to update the state
   const dispatch = useDispatch();
@@ -58,24 +69,52 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    setImage(loginUser.user.profileUrl);
     setUser(loginUser.user);
   }, []);
+
+  // handle upload for file
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("image", selectedFile);
+
+      console.log(formData);
+
+      // const response = await axios.post("/upload", formData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+
+      // console.log("Image uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  // handle file change for input type
+  const handleFileChange = (event) => {
+    console.log(URL.createObjectURL(event.target.files[0]));
+    setImage(URL.createObjectURL(event.target.files[0]));
+    setSelectedFile(event.target.files[0]);
+  };
 
   const { values, errors, handleChange, handleSubmit, handleBlur, touched } =
     useFormik({
       initialValues: loginUser.user,
 
-      onSubmit: (values, action) => {
+      onSubmit: async (values, action) => {
+        const formData = await handleUpload();
         console.log(values);
 
         // show spinner
         // setShowSpinner(true);
 
         // execute the userService method to update the state of user with new state
-        /*
 
         userService
-          .update(values)
+          .update(values, formData)
           .then((data) => {
             notify("Profile updated sucessfully");
 
@@ -93,142 +132,10 @@ const Profile = () => {
               // setShowSpinner(false);
             }
           });
-          */
       },
     });
 
   return (
-    // <div
-    //   className="container-fluid p-2"
-    //   style={{
-    //     backgroundPosition: "center",
-    //     backgroundSize: "cover",
-    //     backgroundRepeat: "no-repeat",
-    //   }}
-    // >
-    //   <div className="row">
-    //     <div className="col-md-6 offset-md-3">
-    //       <div className="card paint-card">
-    //         <div className="card-header">
-    //           <h3 className="text-center text-dark">Edit Profile</h3>
-    //         </div>
-    //         <div className="card-body">
-    //           <form
-    //             action="addUser"
-    //             className=""
-    //             method="post"
-    //             onSubmit={(e) => update(e)}
-    //           >
-    //             <div className="row">
-    //               <div className="col">
-    //                 <label>First Name</label>
-    //                 <input
-    //                   type="text"
-    //                   name="firstName"
-    //                   required
-    //                   className="form-control form-control-sm"
-    //                   defaultValue={user.firstName}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-    //             </div>
-    //             <div className="row mt-3">
-    //               <div className="col">
-    //                 <label>Email Id</label>
-    //                 <input
-    //                   type="email"
-    //                   name="email"
-    //                   required
-    //                   readOnly
-    //                   className="form-control form-control-sm"
-    //                   value={user.email}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-    //               <div className="col">
-    //                 <label>Mobile No</label>
-    //                 <input
-    //                   type="number"
-    //                   name="mobNo"
-    //                   required
-    //                   maxLength={10}
-    //                   minLength={10}
-    //                   className="form-control form-control-sm"
-    //                   value={user.mobileNumber}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-    //             </div>
-
-    //             <div className="form-group mt-3">
-    //               <label>Address</label>
-    //               <textarea
-    //                 required
-    //                 rows="3"
-    //                 cols=""
-    //                 className="form-control"
-    //                 name="address"
-    //                 value={user.address}
-    //                 onChange={(e) => handleChange(e)}
-    //               ></textarea>
-    //             </div>
-
-    //             <div className="row mt-3">
-    //               <div className="col">
-    //                 <label>City</label>
-    //                 <input
-    //                   type="text"
-    //                   name="city"
-    //                   required
-    //                   className="form-control form-control-sm"
-    //                   value={user.city}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-    //               <div className="col">
-    //                 <label>State</label>
-    //                 <input
-    //                   type="text"
-    //                   name="state"
-    //                   className="form-control form-control-sm"
-    //                   value={user.state}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-
-    //               <div className="col">
-    //                 <label>Pincode</label>
-    //                 <input
-    //                   type="number"
-    //                   name="pincode"
-    //                   className="form-control form-control-sm"
-    //                   value={user.pincode}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </div>
-    //             </div>
-
-    //             <div className="text-center mt-3">
-    //               <button className="btn btn-primary col-md-12">update</button>
-    //             </div>
-    //           </form>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <ToastContainer
-    //     position="top-center"
-    //     autoClose={5000}
-    //     hideProgressBar={false}
-    //     newestOnTop={false}
-    //     closeOnClick
-    //     rtl={false}
-    //     pauseOnFocusLoss
-    //     draggable
-    //     pauseOnHover
-    //   />
-    // </div>
-
     <>
       <form onSubmit={handleSubmit}>
         <div id="user-profile-section">
@@ -236,12 +143,8 @@ const Profile = () => {
             <div>
               {/* profile icon */}
 
-              {user.profileUrl ? (
-                <img
-                  src={user.profileUrl}
-                  className="profile-img"
-                  alt={user.firstName}
-                />
+              {image ? (
+                <img src={image} className="profile-img" alt={image} />
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -268,7 +171,7 @@ const Profile = () => {
               className="file-input"
               accept="image/*"
               name={values.profileUrl}
-              onChange={handleChange}
+              onChange={handleFileChange}
             />
             <label for="fileInput" className="file-label">
               Choose File
@@ -335,8 +238,71 @@ const Profile = () => {
             </div>
           </div>
 
+          <div id="address-section">
+            <div className="w-425">
+              <p
+                className="btn btn-light"
+                onClick={() => setShowAddressForm(!showAddressForm)}
+              >
+                Update Address
+              </p>
+            </div>
+
+            <div>
+              {showAddressForm && (
+                <div id="address-form">
+                  <div id="add-address-form">
+                    <div>
+                      <label htmlFor="city" class="styled-label">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        className="styled-input w-425"
+                        id="city"
+                        value={values.city}
+                        placeholder="Add City"
+                        handleChange
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="state" class="styled-label">
+                        State
+                      </label>
+                      <input
+                        type="text"
+                        className="styled-input w-425"
+                        id="state"
+                        value={values.state}
+                        handleChange
+                        placeholder="State"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="postalCode" class="styled-label">
+                        Postal Code
+                      </label>
+                      <input
+                        type="text"
+                        className="styled-input w-425"
+                        id="postalCode"
+                        value={values.postalCode}
+                        handleChange
+                        placeholder="postalCode"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div>
-            <button className="btn btn-outline-dark">update changes</button>
+            <button className="btn btn-lg btn-outline-dark">
+              update changes
+            </button>
           </div>
         </div>
       </form>
