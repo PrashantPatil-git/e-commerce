@@ -2,16 +2,16 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-//import back from "../img/back2.jpg";
-import User from "../model/User";
-import userService from "../service/user.service";
 
-import { setCurrentUser } from "../store/action/user.action";
+import User from "../../model/User";
+import userService from "../../service/user.service";
+
+import { setCurrentUser } from "../../store/action/user.action";
 
 // importing spinner
 import { RotatingLines } from "react-loader-spinner";
 
-const Login = () => {
+const AdminLogin = () => {
   const [user, setUser] = useState(
     new User("", "", "", "", "", "", "", "", "", "", "")
   );
@@ -44,7 +44,7 @@ const Login = () => {
 
   useEffect(() => {
     if (loginUser?.id) {
-      navigate("/");
+      navigate("/adminDashboard");
     }
   }, []);
 
@@ -63,7 +63,7 @@ const Login = () => {
         // hide the spinner
         setShowSpinner(false);
         // navigate to the home page after user logs in successfully
-        navigate("/");
+        navigate("/adminDashboard");
       })
       .catch((error) => {
         setMessage("invalid email and password");
@@ -150,4 +150,4 @@ const Login = () => {
   );
 };
 
-export { Login };
+export { AdminLogin };

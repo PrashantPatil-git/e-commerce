@@ -18,6 +18,7 @@ import SellerHome from "./pages/seller/SellerHome";
 */
 import "react-toastify/dist/ReactToastify.css";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import { AdminLogin } from "./pages/admin/AdminLogin";
 
 function App() {
   return (
@@ -35,11 +36,15 @@ function App() {
         <Route path="/sellerRegister" element={<SellerRegister />}></Route>
         <Route path="/sellerHome" element={<SellerHome />}></Route>
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
+        <Route path="/adminDashboard" element={<AdminDashboard />}></Route>
+
+
+
 
         {/* navigate the admin to the login page only if there is no user or admin is logged in */}
         <Route
           path="/admin-login"
-          element={5 === 5 ? <AdminDashboard /> : <Navigate to="/Home" />}
+          element={localStorage.loginUser === null? <AdminLogin/> : <Navigate to="/Home" />}
         ></Route>
       </Routes>
     </BrowserRouter>

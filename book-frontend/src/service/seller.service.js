@@ -23,6 +23,9 @@ class sellerService {
     ];
   }
   deleteBook(id) {}
+
+  //admin will verify and to update verified seller this function is used
+  updateSeller(seller) {}
 }
 
 export default new sellerService();
