@@ -11,7 +11,15 @@ const sellerReducer = (state = {}, action) => {
       localStorage.removeItem("token");
       return null;
     default:
-      return JSON.parse(localStorage.getItem("loginUser"));
+      // if login admin exists as a admin
+      if (localStorage.getItem("loginUser") !== null) {
+        return JSON.parse(localStorage.getItem("loginUser")).seller ===
+          undefined
+          ? null
+          : JSON.parse(localStorage.getItem("loginUser"));
+      } else {
+        return null;
+      }
   }
 };
 

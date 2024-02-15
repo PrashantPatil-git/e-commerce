@@ -1,6 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "./component/Navbar/Navbar";
+import { Footer } from "./component/footer/Footer";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { ViewBook } from "./pages/ViewBook";
@@ -33,6 +34,11 @@ function App() {
 
   useEffect(() => {
     // set the variables according to the type of user logged other wise all are false means visitor is performing actions
+
+    console.log(loginUser);
+    console.log(loginSeller);
+    console.log(loginAdmin);
+
     if (loginUser) {
       setIsUser(true);
     } else if (loginSeller) {
@@ -57,7 +63,20 @@ function App() {
         <Route path="/sellerRegister" element={<SellerRegister />}></Route>
         <Route path="/sellerHome" element={<SellerHome />}></Route>
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
-        <Route path="/adminDashboard" element={<AdminDashboard />}></Route>
+        <Route
+          path="/adminDashboard"
+          element={
+            !isSeller && !isUser ? (
+              isAdmin ? (
+                <AdminDashboard />
+              ) : (
+                <AdminLogin />
+              )
+            ) : (
+              <Navigate to="/Home" />
+            )
+          }
+        ></Route>
 
         {/* navigate the admin to the login page only if there is no user or admin is logged in */}
 
@@ -66,7 +85,7 @@ function App() {
         <Route
           path="/admin-login"
           element={
-            !isSeller || !isUser ? (
+            !isSeller && !isUser ? (
               isAdmin ? (
                 <AdminDashboard />
               ) : (
@@ -78,6 +97,7 @@ function App() {
           }
         ></Route>
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

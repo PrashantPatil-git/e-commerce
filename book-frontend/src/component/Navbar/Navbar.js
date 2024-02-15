@@ -41,7 +41,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary p-3">
         <div className="container-fluid">
           <Link to="/" className="navbar-brand text-white">
             <i className="fa-solid fa-book" /> Book Shop
@@ -87,7 +87,8 @@ const Navbar = () => {
                       className="nav-link active"
                       aria-current="page"
                     >
-                      <i className="fa-solid fa-right-to-bracket"></i> Login
+                      {/* <i className="fa-solid fa-right-to-bracket"></i> Login */}
+                      Login
                     </Link>
                   </li>
 
