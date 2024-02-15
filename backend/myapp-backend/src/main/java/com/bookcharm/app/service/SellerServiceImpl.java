@@ -2,17 +2,40 @@ package com.bookcharm.app.service;
 
 import java.util.Optional;
 
+import com.bookcharm.app.dto.*;
+import com.bookcharm.app.exception.AuthenticationFailedException;
+import com.bookcharm.app.exception.ClientErrorException;
+import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.model.ShoppingCart;
+import com.bookcharm.app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.repository.SellerRepository;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class SellerServiceImpl implements SellerService {
 
+
     @Autowired
     private SellerRepository sellerRepository;
+
+    private final WebClient.Builder builder;
+    private WebClient authenticationServiceWebClient;
+    private WebClient mailServiceWebClient;
+
+    public SellerServiceImpl(@Value("${url.authentication-service-base-url}") String authenticationServiceBaseUrl, @Value("${url.notification-service-base-url}") String notificationServiceBaseUrl, WebClient.Builder builder) {
+        this.builder = builder;
+        this.authenticationServiceWebClient = builder.baseUrl(authenticationServiceBaseUrl).build();
+        this.mailServiceWebClient = builder.baseUrl(notificationServiceBaseUrl).build();
+    }
 
     @Override
     public Seller getSellerById(Long sellerId) {
@@ -21,9 +44,58 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller createSeller(Seller seller) {
+    public Seller createSeller(SellerRegistrationDto sellerRegistrationDto) {
         // Add logic for seller creation, validation, etc.
-        return sellerRepository.save(seller);
+
+        // find whether seller already exists in db with email address
+
+        // validate mobile number
+
+        Optional<Seller> optionalSeller = sellerRepository.findByEmail(sellerRegistrationDto.getEmail());
+
+        if (optionalSeller.isPresent()) {
+            // throw error as user with email already exists
+            Seller user = optionalSeller.get();
+            throw new EmailAlreadyExistsException("Email address is already in use");
+        } else {
+            // means seller with email address does not exists
+            // next steps
+            // validate the seller details
+            // email,
+            // call authentication-mail service to create as well as get the User, and token if valid
+
+            SellerRegistrationResponse sellerRegistrationResponse = authenticationServiceWebClient.post().uri("/seller/register")
+                    .body(BodyInserters.fromValue(sellerRegistrationDto))
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse))
+                    .bodyToMono(SellerRegistrationResponse.class)
+                    .block();
+
+            System.out.println(sellerRegistrationResponse.getSellerRegistrationDto());
+
+            SellerRegistrationDto newSellerRegistrationDto = sellerRegistrationResponse.getSellerRegistrationDto();
+            Seller newSeller = new Seller();
+            newSeller.setEmail(newSellerRegistrationDto.getEmail());
+            newSeller.setFirstName(newSellerRegistrationDto.getFirstName());
+            newSeller.setLastName(newSellerRegistrationDto.getLastName());
+            newSeller.setMobileNumber(newSellerRegistrationDto.getMobileNumber());
+            newSeller.setPanNumber(newSellerRegistrationDto.getPanNumber());
+            newSeller.setPassWord(newSellerRegistrationDto.getPassWord());
+
+
+            newSeller = sellerRepository.save(newSeller);
+
+            // notify to the user for,
+            // greet and say we're reached to you by email once we verified your account
+
+            try{
+                mailServiceWebClient.post().uri("/seller/registration").body(BodyInserters.fromValue(newSeller)).retrieve().onStatus(HttpStatus::is4xxClientError,response -> handleClientError(response)).bodyToMono(Void.class).subscribe();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return newSeller;
+        }
     }
 
     @Override
@@ -34,7 +106,6 @@ public class SellerServiceImpl implements SellerService {
             // Update the existing seller with the new information
             existingSeller.setFirstName(updatedSeller.getFirstName());
             existingSeller.setLastName(updatedSeller.getLastName());
-            existingSeller.setProductCount(updatedSeller.getProductCount());
             existingSeller.setPanNumber(updatedSeller.getPanNumber());
             existingSeller.setMobileNumber(updatedSeller.getMobileNumber());
             existingSeller.setEmail(updatedSeller.getEmail());
@@ -55,5 +126,17 @@ public class SellerServiceImpl implements SellerService {
         return false;
     }
 
-    // Add other SellerService methods if needed
+
+
+    // handle client error if, token is invalid throw UnauthorizedAccessException or throw ClientErrorException
+    private Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {
+
+        // through an error when user password not matched with passed password
+        if(clientResponse.statusCode().equals(HttpStatus.UNAUTHORIZED)){
+            return Mono.error(new AuthenticationFailedException("password not match"));
+        }
+
+        return Mono.error(new ClientErrorException("Client Error: " + clientResponse.statusCode()));
+
+    }
 }

@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 // to change the state (current authenticated user)
 import { setCurrentUser } from "../../store/action/user.action";
 
+import { RotatingLines } from "react-loader-spinner";
+
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -27,70 +29,62 @@ const SellerRegister = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const loginUser = useSelector((u) => u.user);
+  // state for spinner button
 
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    panNumber: "",
-    passWord: "",
-    mobileNumber: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
-  });
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState("");
   const [succMsg, setSuccMsg] = useState("");
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUser((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
-
   const { values, errors, handleChange, handleSubmit, handleBlur, touched } =
     useFormik({
       initialValues: initialValues,
-      //validationSchema: signupUpSchema,
+
       onSubmit: (values, action) => {
-        console.log(values);
+        setShowSpinner(true);
         sellerService
           .register(values)
           .then((res) => {
             const navigateToHomePageTimeout = setTimeout(() => {
               // after successfully login register navigate to the home page of seller
               navigate("/");
-            }, 2000);
+            }, 5000);
 
-            notify(res.data.message);
-            // set the current authenticated user as new registered user using dispatcher of react-redux
-            // dispatch(setCurrentUser({ user: data.data.user }));
-
-            // clear the time out settled for before navigate to home page
+            notify(res);
+            notify("Your request is under processing, we notify you on email");
+            setShowSpinner(false);
           })
           .catch((error) => {
             console.log(error);
-            if (error.response?.status === 409) {
-              notify("Email id already exist");
-              navigate("/sellerRegister");
-            }
-          });
 
-        action.resetForm();
+            // if (error.response?.status === 409) {
+            // notifyError(error.response.data);
+            // }
+
+            // global error notifier
+            notifyError(error.response.data);
+            setShowSpinner(false);
+          });
       },
     });
+
+  // toast buttons
+  const notifyError = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   const notify = (msg) => {
     toast.success(msg, {
       position: "top-center",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -221,41 +215,57 @@ const SellerRegister = () => {
                     <label>Confirm Password</label>
                     <input
                       type="text"
-                      name="confirmpassword"
+                      name="confirmPassWord"
                       className="form-control form-control-sm"
-                      value={values.confirmpassword}
+                      value={values.confirmPassWord}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                    {errors.confirmpassword && touched.confirmpassword ? (
-                      <p className="text-danger">{errors.confirmpassword}</p>
+                    {errors.confirmPassWord && touched.confirmPassWord ? (
+                      <p className="text-danger">{errors.confirmPassWord}</p>
                     ) : null}
                   </div>
                 </div>
 
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="text-center mt-3">
-                      {/* Use Link component with "to" prop to specify the target route */}
-                      <Link
-                        to="/sellerLogin"
-                        className="btn btn-primary col-md-12"
-                      >
-                        Login
-                      </Link>
+                {showSpinner ? (
+                  <div className="text-center mt-3">
+                    <RotatingLines
+                      visible={true}
+                      height="57"
+                      width="57"
+                      color="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      ariaLabel="rotating-lines-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="text-center mt-3">
+                        {/* Use Link component with "to" prop to specify the target route */}
+                        <Link
+                          to="/sellerLogin"
+                          className="btn btn-primary col-md-12"
+                        >
+                          Login
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="text-center mt-3">
+                        <button
+                          type="submit"
+                          className="btn btn-primary col-md-12"
+                        >
+                          Register
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-6">
-                    <div className="text-center mt-3">
-                      <button
-                        type="submit"
-                        className="btn btn-primary col-md-12"
-                      >
-                        Register
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                )}
               </form>
             </div>
           </div>

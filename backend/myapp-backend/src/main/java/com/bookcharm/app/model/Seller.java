@@ -11,8 +11,6 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JoinColumn(name = "sellerId")
     private Long sellerId;
-    @JoinColumn(name = "productCount")
-    private int productCount;
     @JoinColumn(name = "firstName")
     private String firstName;
     @JoinColumn(name = "lastName")
@@ -27,18 +25,22 @@ public class Seller {
     private String passWord;
     
 
+
+    @JoinColumn(name = "isVerified")
+    private boolean isVerified;
+
     // Constructors
     public Seller() {
     }
 
-    public Seller(int productCount, String firstName, String lastName, String panNumber, String mobileNumber, String email, String passWord) {
-        this.productCount = productCount;
+    public Seller(String firstName, String lastName, String panNumber, String mobileNumber, String email, String passWord, boolean isVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.panNumber = panNumber;
         this.mobileNumber = mobileNumber;
         this.email = email;
         this.passWord = passWord;
+        this.isVerified = isVerified;
     }
 
     // Getters and Setters
@@ -52,13 +54,6 @@ public class Seller {
         this.sellerId = sellerId;
     }
 
-    public int getProductCount() {
-        return productCount;
-    }
-
-    public void setProductCount(int productCount) {
-        this.productCount = productCount;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -108,19 +103,25 @@ public class Seller {
         this.passWord = passWord;
     }
 
-    // Other methods, if needed
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
 
     @Override
     public String toString() {
         return "Seller{" +
                 "sellerId=" + sellerId +
-                ", productCount=" + productCount +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", panNumber='" + panNumber + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
                 ", email='" + email + '\'' +
                 ", passWord='" + passWord + '\'' +
+                ", isVerified='" + isVerified + '\'' +
                 '}';
     }
 }

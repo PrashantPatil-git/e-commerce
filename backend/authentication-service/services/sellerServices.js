@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const Seller = require("../models/seller"); // Sequelize model Seller for orm
 const { createToken } = require("../authentication/getToken");
 const { hashPassword } = require("../utils/encrypt");
 
@@ -12,12 +11,7 @@ const register = async (req) => {
     let { firstName, lastName, panNumber, mobileNumber, email, passWord } =
       req.body;
 
-    // Check if the seller with the email already exists
-    const existingSeller = await Seller.findOne({ where: { email } });
-
-    if (existingSeller) {
-      throw new Error("Seller with this email already exists");
-    }
+    console.log(firstName, lastName, panNumber, mobileNumber, email, passWord);
 
     // verify credentials, email , mobileNumber
 
@@ -39,25 +33,27 @@ const register = async (req) => {
     const hashedPassword = await hashPassword(passWord);
 
     // Create the seller
-    const seller = await Seller.create({
+    const seller = {
       firstName,
       lastName,
       panNumber,
       mobileNumber,
       email,
       passWord: hashedPassword,
-    });
+    };
 
     return {
+      seller: seller,
       success: true,
       message: "Request is under processing(for seller registration)",
     };
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error);
   }
 };
 
 const login = async (email, passWord) => {
+  /*
   try {
     // first validate whether email is valid email or not
     // validate email
@@ -84,6 +80,7 @@ const login = async (email, passWord) => {
   } catch (error) {
     throw new Error(error.message);
   }
+  */
 };
 
 module.exports = { register, login };

@@ -21,16 +21,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto){
 
@@ -56,7 +46,9 @@ public class UserController {
             return new ResponseEntity<RegistrationResponse>(registrationResponse, HttpStatus.CREATED);
         }
         catch (EmailAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body("Email address is already in use");
+
+            return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
+
         }
 
 
@@ -68,7 +60,6 @@ public class UserController {
 
         String token = request.getHeader("Authorization");
         System.out.println(token);
-
 
 ////        User updatedUser = userService.updateUser(userId, user);
 //        if (updatedUser != null) {

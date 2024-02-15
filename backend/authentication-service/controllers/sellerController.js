@@ -5,12 +5,18 @@ exports.registerSeller = async (req, res) => {
   try {
     const result = await sellerService.register(req);
     if (result.success) {
-      return res.status(200).json({ message: result.message });
+      return res.status(200).json({
+        sellerRegistrationDto: result.seller,
+        message: result.message,
+      });
     } else {
-      return res.status(400).json({ error: result.message });
+      return res.status(400).json({ message: result.message });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log("Error Occured : ", error);
+    return res
+      .status(422)
+      .json({ message: "error while while registering seller" });
   }
 };
 

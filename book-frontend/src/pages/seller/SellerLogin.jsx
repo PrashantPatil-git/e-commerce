@@ -1,5 +1,3 @@
-
-
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,10 +8,12 @@ import sellerService from "../../service/seller.service";
 
 import { setCurrentUser } from "../../store/action/user.action";
 
+import { RotatingLines } from "react-loader-spinner";
+
 const SellerLogin = () => {
-  const [user, setUser] = useState(
-    new User("", "", "", "", "", "", "", "", "", "", "")
-  );
+  // state for spinner button
+
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const [message, setMessage] = useState("");
   const [logMessage, setLogMessage] = useState("");
@@ -22,9 +22,11 @@ const SellerLogin = () => {
     email: "",
     passWord: "",
   });
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginUser = useSelector((u) => u.user);
+
+  const loginSeller = useSelector((state) => state.seller);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +40,7 @@ const SellerLogin = () => {
   };
 
   useEffect(() => {
-    if (loginUser?.id) {
+    if (loginSeller.seller) {
       navigate("/sellerHome");
     }
   }, []);
@@ -96,7 +98,8 @@ const SellerLogin = () => {
                     type="email"
                     className="form-control"
                     onChange={(e) => handleChange(e)}
-                    name="email" required
+                    name="email"
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -105,13 +108,30 @@ const SellerLogin = () => {
                     type="password"
                     className="form-control"
                     onChange={(e) => handleChange(e)}
-                    name="passWord" required
+                    name="passWord"
+                    required
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary col-md-12">
-                  Login
-                </button>
+                {showSpinner ? (
+                  <div className="text-center mt-3">
+                    <RotatingLines
+                      visible={true}
+                      height="57"
+                      width="57"
+                      color="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      ariaLabel="rotating-lines-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  <button type="submit" className="btn btn-primary col-md-12">
+                    Login
+                  </button>
+                )}
 
                 {/* <div className="text-center p-3">
                   <a href="loadforgotPassword" className="text-decoration-none">
@@ -126,9 +146,5 @@ const SellerLogin = () => {
     </div>
   );
 };
-
-
-
-
 
 export default SellerLogin;
