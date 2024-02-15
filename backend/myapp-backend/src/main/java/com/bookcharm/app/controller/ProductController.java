@@ -1,8 +1,10 @@
 package com.bookcharm.app.controller;
 
+import com.bookcharm.app.jwtVarifiaction.JwtUtil;
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,33 +32,47 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
+    
+    //Seller will add Product
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        // Add logic for creating a new product
-        Product createdProduct = productService.createProduct(product);
-        return ResponseEntity.ok(createdProduct);
+    public ResponseEntity<?> AddProduct(@RequestBody Product product,@RequestHeader String jwt) {
+       Long sellerId =JwtUtil.verifySeller(jwt);
+    	if( sellerId !=null) {
+     		   productService.addProduct(product);
+    	
+    		return ResponseEntity.ok("Product Added SuccessFully");
+        }else {
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+        	
+        }
+        
+        
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
         // Add logic for updating an existing product
-        Product updatedProduct = productService.updateProduct(productId, product);
+    	Product updatedProduct = productService.updateProduct(productId, product);
         if (updatedProduct != null) {
             return ResponseEntity.ok(updatedProduct);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
+    
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        // Add logic for deleting a product
-        boolean deleted = productService.deleteProduct(productId);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId,@RequestHeader String jwt) {
+       
+    	Long sellerId =JwtUtil.verifySeller(jwt);
+    	if( sellerId !=null) {
+    		
+    		productService.deleteProduct(productId);
+    		return ResponseEntity.ok("Product Deleted SuccessFully");
+        }else {
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+        	
         }
     }
 
