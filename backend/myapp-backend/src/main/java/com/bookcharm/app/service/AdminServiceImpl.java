@@ -1,5 +1,6 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.dto.AuthenticationResponse;
 import com.bookcharm.app.dto.LoginResponse;
 import com.bookcharm.app.dto.LoginValidationDto;
 import com.bookcharm.app.dto.UserLoginDto;
@@ -10,12 +11,15 @@ import com.bookcharm.app.model.Admin;
 import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.model.User;
 import com.bookcharm.app.repository.AdminRepository;
+import com.bookcharm.app.repository.SellerRepository;
 
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -30,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
+    private SellerRepository sellerRepository;
     
     
     private WebClient.Builder builder;
@@ -63,6 +68,7 @@ public class AdminServiceImpl implements AdminService {
 
              String jwtToken = authenticationServiceWebClient.post().uri("/user/login").body(BodyInserters.fromValue(loginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(LoginResponse.class).map(LoginResponse::getToken).block();
              // if everything is fine return response
+             
              return jwtToken;
 
          }else{
@@ -72,13 +78,7 @@ public class AdminServiceImpl implements AdminService {
 
     }
     
-    @Override
-	public List<Seller> getAllSellers(String jwtToken) {
-		// TODO Auto-generated method stub
-    	
-    	
-		return null;
-	}
+   
    
     
  // handle client error if, token is invalid throw UnauthorizedAccessException or throw ClientErrorException

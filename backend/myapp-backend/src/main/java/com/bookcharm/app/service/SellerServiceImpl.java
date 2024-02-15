@@ -10,7 +10,9 @@ import com.bookcharm.app.model.ShoppingCart;
 import com.bookcharm.app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bookcharm.app.model.Seller;
@@ -125,6 +127,24 @@ public class SellerServiceImpl implements SellerService {
         }
         return false;
     }
+    
+    // Only admin will able to check un verified sellers
+    @Override
+   	public ResponseEntity<?> getAllUnVerifiedSellers(String jwtToken) {
+   		
+       	
+       	Long adminId = webClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
+           handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
+           
+       	if(sellerRepository.existsById(adminId)) {
+       		
+       		return sellerRepository.getAllUnVerifiedSellers();
+       	
+       	}
+       	
+       	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNATHOURISED");
+   		
+   	}
 
 
 

@@ -34,15 +34,5 @@ public class AdminController {
     	}
     	
     }
-    @GetMapping
-    public ResponseEntity<List<Seller>> getAllSellers(@RequestHeader String authorization){
-    	
-    	String jwtToken = authorization;
-    	
-    	List<Seller> sellers = adminService.getAllSellers(jwtToken);
-    	
-    	return sellers != null ? new ResponseEntity<>(sellers, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    	
-    }
-
+    
 }

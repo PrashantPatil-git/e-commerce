@@ -62,5 +62,18 @@ public class SellerController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    
+    @GetMapping
+    public ResponseEntity<?> getAllUnVerifiedSellers(@RequestHeader String authorization){
+    	
+    	String jwtToken = authorization;
+    	
+    	ResponseEntity<?> sellers = sellerService.getAllUnVerifiedSellers(jwtToken);
+    	
+    	return sellers != null ? new ResponseEntity<>(sellers, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	
+    }
+
 
 }
