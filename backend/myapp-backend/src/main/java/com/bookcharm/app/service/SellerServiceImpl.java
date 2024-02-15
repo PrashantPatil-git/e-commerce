@@ -6,6 +6,7 @@ import com.bookcharm.app.dto.*;
 import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.ClientErrorException;
 import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.model.ShoppingCart;
 import com.bookcharm.app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,45 @@ public class SellerServiceImpl implements SellerService {
 
             return newSeller;
         }
+    }
+
+
+    @Override
+    public SellerResponse loginSeller(SellerLoginDto sellerLoginDto){
+
+        // find whether user with email exists or not
+
+        String email = sellerLoginDto.getEmail();
+        String passWord = sellerLoginDto.getPassWord();
+
+        // if user not exists
+        // return error with message "user not exists with this email"
+        // if exists
+        // send user for authentication with userLoginDto to compare the passwords and get the token
+        //      if error occured means password didn't match
+        //      else
+        //      send the LoginResponse with (User and token)
+
+
+        Optional<Seller> optionalSeller = sellerRepository.findByEmail(email);
+
+        if(optionalSeller.isPresent() && optionalSeller.get().isVerified()){
+
+            Seller seller = optionalSeller.get();
+            SellerLoginValidationDto sellerLoginValidationDto = new SellerLoginValidationDto();
+            sellerLoginValidationDto.setSellerId(seller.getSellerId());
+            sellerLoginValidationDto.setSellerPassWord(seller.getPassWord());
+            sellerLoginValidationDto.setValidationPassWord(sellerLoginDto.getPassWord());
+
+            String jwtToken = authenticationServiceWebClient.post().uri("/seller/login").body(BodyInserters.fromValue(sellerLoginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(SellerResponse.class).map(SellerResponse::getToken).block();
+            // if everything is fine return response
+            return new SellerResponse(seller, jwtToken);
+
+        }else{
+            // if user not exists
+            throw new UserNotFoundException("Seller with " + email + " not found");
+        }
+
     }
 
     @Override

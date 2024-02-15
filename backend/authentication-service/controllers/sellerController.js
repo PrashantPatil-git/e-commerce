@@ -22,10 +22,12 @@ exports.registerSeller = async (req, res) => {
 
 exports.authenticateSeller = async (req, res) => {
   try {
-    const { email, passWord } = req.body;
-    const { token, seller } = await sellerService.login(email, passWord);
-    res.status(200).json({ token, seller });
+    const { token } = await sellerService.login(req);
+    // Return a success response with the user object and token
+    return res.status(200).json({ token: token });
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    // Handle any errors that occur during login
+    console.error("Error during login:", error);
+    return res.status(401).json({ error: "Login failed: " + error.message });
   }
 };

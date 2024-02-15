@@ -52,35 +52,36 @@ const register = async (req) => {
   }
 };
 
-const login = async (email, passWord) => {
-  /*
+const login = async (req) => {
+  // email is validated in core application
+
+  // access all the fields required
+
+  // email is validated in core application
+  const { sellerId, sellerPassWord, validationPassWord } = req.body;
+
+  console.log(sellerId, sellerPassWord, validationPassWord);
+
   try {
-    // first validate whether email is valid email or not
-    // validate email
-    //  or we can skip directly checking this into our db
-    //   const emailValidationResult = await validateEmail(email);
+    const isPasswordValid = await bcrypt.compare(
+      validationPassWord,
+      sellerPassWord
+    );
 
-    // Find the seller by email
-    const seller = await Seller.findOne({ where: { email } });
-    if (!seller) {
-      throw new Error("Seller not found");
+    // Check if password matches
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
     }
 
-    // Compare passwords
-    const passwordMatch = await bcrypt.compare(passWord, seller.passWord);
+    const token = await createToken(sellerId);
 
-    if (!passwordMatch) {
-      throw new Error("Incorrect password for seller login");
-    }
-
-    // Generate JWT token
-    const token = await createToken(seller.sellerId);
-
-    return { token, seller };
+    console.log(token);
+    // return token
+    return { token };
   } catch (error) {
+    console.log("error while login seller : " + error);
     throw new Error(error.message);
   }
-  */
 };
 
 module.exports = { register, login };

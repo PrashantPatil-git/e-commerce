@@ -1,6 +1,5 @@
 package com.bookcharm.app.dto;
 
-import com.bookcharm.app.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginValidationDto {
 
-    Long userId;
-    String userPassword;
-    String validationPassword;
+public class SellerLoginDto {
+    private String email;
+    private String passWord;
+
 }
-
-
-

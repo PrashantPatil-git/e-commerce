@@ -1,5 +1,7 @@
 package com.bookcharm.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.websocket.ClientEndpoint;
 
@@ -21,6 +23,8 @@ public class Seller {
     private String mobileNumber;
     @JoinColumn(name = "email")
     private String email;
+
+    @JsonIgnore
     @JoinColumn(name = "passWord")
     private String passWord;
 

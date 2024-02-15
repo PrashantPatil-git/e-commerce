@@ -1,5 +1,6 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.dto.SellerLoginDto;
 import com.bookcharm.app.dto.SellerRegistrationDto;
 import com.bookcharm.app.dto.SellerResponse;
 import com.bookcharm.app.model.Seller;
@@ -9,5 +10,6 @@ public interface SellerService {
     Seller createSeller(SellerRegistrationDto sellerRegistrationDto);
     Seller updateSeller(Long sellerId, Seller seller);
     boolean deleteSeller(Long sellerId);
+    SellerResponse loginSeller(SellerLoginDto sellerLoginDto);
     // Other SellerService methods
 }
