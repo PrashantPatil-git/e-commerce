@@ -38,13 +38,11 @@ function App() {
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
         <Route path="/adminDashboard" element={<AdminDashboard />}></Route>
 
-
-
-
         {/* navigate the admin to the login page only if there is no user or admin is logged in */}
         <Route
           path="/admin-login"
-          element={localStorage.loginUser === null? <AdminLogin/> : <Navigate to="/Home" />}
+          // element={localStorage.loginUser === null? <AdminLogin/> : <Navigate to="/Home" />}
+          element={<AdminLogin />}
         ></Route>
       </Routes>
     </BrowserRouter>

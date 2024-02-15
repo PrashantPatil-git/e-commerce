@@ -110,15 +110,6 @@ public class SellerServiceImpl implements SellerService {
         String email = sellerLoginDto.getEmail();
         String passWord = sellerLoginDto.getPassWord();
 
-        // if user not exists
-        // return error with message "user not exists with this email"
-        // if exists
-        // send user for authentication with userLoginDto to compare the passwords and get the token
-        //      if error occured means password didn't match
-        //      else
-        //      send the LoginResponse with (User and token)
-
-
         Optional<Seller> optionalSeller = sellerRepository.findByEmail(email);
 
         if(optionalSeller.isPresent() && optionalSeller.get().isVerified()){
@@ -173,7 +164,7 @@ public class SellerServiceImpl implements SellerService {
    	public ResponseEntity<?> getAllUnVerifiedSellers(String jwtToken) {
    		
        	
-       	Long adminId = webClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
+       	Long adminId = authenticationServiceWebClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
            handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
            
        	if(sellerRepository.existsById(adminId)) {

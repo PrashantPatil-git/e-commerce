@@ -1,5 +1,6 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.dto.SellerLoginDto;
 import org.springframework.http.ResponseEntity;
 
 import com.bookcharm.app.dto.SellerRegistrationDto;

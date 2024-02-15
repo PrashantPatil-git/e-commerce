@@ -1,5 +1,6 @@
 package com.bookcharm.app.dto;
 
+import com.bookcharm.app.model.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+public class AdminResponse {
 
-public class UserLoginDto {
-    private String email;
-    private String passWord;
-
+    Admin admin;
+    String token;
 }
-

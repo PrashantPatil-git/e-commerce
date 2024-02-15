@@ -1,12 +1,10 @@
 const { login } = require("../services/adminServices");
 
 exports.authenticateAdmin = async (req, res) => {
-  const { userName, passWord } = req.body;
-
   try {
-    const token = await login(userName, passWord);
-    res.json({ token });
+    const token = await login(req);
+    return res.status(200).json({ admin: null, token: token });
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    return res.status(401).json({ message: error.message });
   }
 };

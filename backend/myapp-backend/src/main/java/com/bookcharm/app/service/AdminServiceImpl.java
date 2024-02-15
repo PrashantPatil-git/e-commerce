@@ -1,9 +1,6 @@
 package com.bookcharm.app.service;
 
-import com.bookcharm.app.dto.AuthenticationResponse;
-import com.bookcharm.app.dto.LoginResponse;
-import com.bookcharm.app.dto.LoginValidationDto;
-import com.bookcharm.app.dto.UserLoginDto;
+import com.bookcharm.app.dto.*;
 import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.ClientErrorException;
 import com.bookcharm.app.exception.UserNotFoundException;
@@ -28,6 +25,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -49,32 +47,43 @@ public class AdminServiceImpl implements AdminService {
     }
     
 
-    public String loginAdmin(UserLoginDto userLoginDto) {
+    @Override
+    public AdminResponse loginAdmin(AdminLoginDto adminLoginDto) {
     	
     	
-    	String email = userLoginDto.getEmail();
-    	String passWord = userLoginDto.getPassWord();
-    	
-    	Admin admin = adminRepository.findByEmail(email);
-    	
-    	
-    	 if(admin!=null){
+    	String userName = adminLoginDto.getUserName();
+    	String passWord = adminLoginDto.getPassWord();
 
-            
-             LoginValidationDto loginValidationDto = new LoginValidationDto();
-             loginValidationDto.setUserId(admin.getAdminId());
-             loginValidationDto.setUserPassword(admin.getPassWord());
-             loginValidationDto.setValidationPassword(userLoginDto.getPassWord());
 
-             String jwtToken = authenticationServiceWebClient.post().uri("/user/login").body(BodyInserters.fromValue(loginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(LoginResponse.class).map(LoginResponse::getToken).block();
-             // if everything is fine return response
-             
-             return jwtToken;
 
-         }else{
-             // if user not exists
-             throw new UserNotFoundException("User with " + email + " not found");
-         }
+        try{
+            Optional<Admin> optionalAdmin = adminRepository.findByUserName(userName);
+
+            if (optionalAdmin.isPresent()){
+
+                Admin admin = optionalAdmin.get();
+                AdminLoginValidationDto adminLoginValidationDto = new AdminLoginValidationDto();
+                adminLoginValidationDto.setAdminId(admin.getAdminId());
+                adminLoginValidationDto.setPassWord(admin.getPassWord());
+                adminLoginValidationDto.setValidationPassWord(adminLoginDto.getPassWord());
+
+                AdminResponse adminResponse = authenticationServiceWebClient.post().uri("/admin/login").body(BodyInserters.fromValue(adminLoginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(AdminResponse.class).block();
+                // if everything is fine return response
+
+                System.out.println(adminResponse.getToken());
+
+                return new AdminResponse(admin, adminResponse.getToken());
+            }else {
+                throw new UserNotFoundException("Admin with username not found");
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+
+
 
     }
     

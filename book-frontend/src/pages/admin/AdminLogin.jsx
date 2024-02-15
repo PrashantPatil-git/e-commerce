@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import User from "../../model/User";
-import userService from "../../service/user.service";
+import adminService from "../../service/admin.service";
 
 import { setCurrentUser } from "../../store/action/user.action";
 
@@ -22,19 +22,18 @@ const AdminLogin = () => {
   // state for spinner (to show or not)
   const [showSpinner, setShowSpinner] = useState(false);
 
-  const [login, userLogin] = useState({
-    email: "",
+  const [login, adminLogin] = useState({
+    userName: "",
     passWord: "",
   });
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginUser = useSelector((u) => u.user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    userLogin((prevState) => {
+    adminLogin((prevState) => {
       return {
         ...prevState,
         [name]: value,
@@ -43,23 +42,24 @@ const AdminLogin = () => {
   };
 
   useEffect(() => {
-    if (loginUser?.id) {
-      navigate("/adminDashboard");
-    }
+    // if (loginUser?.id) {
+    //   navigate("/adminDashboard");
+    // }
   }, []);
 
   const loginSubmit = (e) => {
     e.preventDefault();
     // show spinner (to denote the processing is started)
     setShowSpinner(true);
-    userService
+    adminService
       .login(login)
       .then((res) => {
         // save jwt token in local storage
         console.log(res);
-        localStorage.setItem("token", res.data.token);
 
-        dispatch(setCurrentUser({ user: res.data.user }));
+        // localStorage.setItem("token", res.data.token);
+
+        // dispatch(setCurrentUser({ user: res.data.user }));
         // hide the spinner
         setShowSpinner(false);
         // navigate to the home page after user logs in successfully
@@ -100,10 +100,10 @@ const AdminLogin = () => {
                 <div className="mb-3">
                   <label className="form-label">Email address</label>
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
                     onChange={(e) => handleChange(e)}
-                    name="email"
+                    name="userName"
                   />
                 </div>
                 <div className="mb-3">

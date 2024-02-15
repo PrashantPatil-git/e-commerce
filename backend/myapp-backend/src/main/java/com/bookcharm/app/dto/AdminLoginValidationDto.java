@@ -10,9 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class UserLoginDto {
-    private String email;
-    private String passWord;
+public class AdminLoginValidationDto {
 
+    Long adminId;
+    String passWord;
+    String validationPassWord;
 }
-

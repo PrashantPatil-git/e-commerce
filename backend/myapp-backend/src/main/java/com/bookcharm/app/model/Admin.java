@@ -1,5 +1,7 @@
 package com.bookcharm.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,9 +13,10 @@ public class Admin {
     @JoinColumn(name = "adminId")
     private Long adminId;
 
-    @JoinColumn(name = "email")
-    private String email;
+    @JoinColumn(name = "userName")
+    private String userName;
 
+    @JsonIgnore
     @JoinColumn(name = "passWord")
     private String passWord;
 
@@ -26,8 +29,8 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(String email, String passWord) {
-        this.email = email;
+    public Admin(String userName, String passWord) {
+        this.userName = userName;
         this.passWord = passWord;
     }
 
@@ -41,11 +44,11 @@ public class Admin {
     }
 
     public String getUsername() {
-        return email;
+        return userName;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.userName = username;
     }
 
     public String getPassWord() {
@@ -62,7 +65,7 @@ public class Admin {
     public String toString() {
         return "Admin{" +
                 "adminId=" + adminId +
-                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
                 ", password='" + passWord + '\'' +
                 '}';
     }
