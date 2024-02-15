@@ -12,3 +12,5 @@ import lombok.Setter;
 public class AdminValidationResponseDto {
     Long adminId;
 }
+
+

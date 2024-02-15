@@ -9,7 +9,7 @@ public interface ProductService {
     Product getProductById(Long productId);
     
     Product updateProduct(Long productId, Product product);
-    boolean deleteProduct(Long productId);
+    boolean deleteProduct(Long productId, String Authorization);
     // Other ProductService methods
-	Product addProduct(Product product);
+	Product addProduct(Product product, String Authorization);
 }

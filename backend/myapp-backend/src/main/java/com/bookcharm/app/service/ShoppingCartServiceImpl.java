@@ -46,7 +46,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCart getShoppingCart(String jwtToken) {
 
         // first identify the user using jwtToken, then return the shopping cart of user
-        Long userId = webClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
+        Long userId = webClient.post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
         handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
         Long shoppingCartId = userId;
 
@@ -63,7 +63,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // authenticate the user using token by making request to authentication service
         // get the user id using token from authentication service
 
-        Long userId = webClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken)
+        Long userId = webClient.post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse))
                 .bodyToMono(AuthenticationResponse.class)

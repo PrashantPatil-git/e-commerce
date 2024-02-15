@@ -1,17 +1,14 @@
 package com.bookcharm.app.utils;
 
-import com.bookcharm.app.dto.AdminValidationDto;
-import com.bookcharm.app.dto.AdminValidationResponseDto;
+import com.bookcharm.app.dto.*;
 import com.bookcharm.app.exception.ClientErrorException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
-import com.bookcharm.app.exception.UserNotFoundException;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -22,7 +19,6 @@ import java.util.Optional;
 @NoArgsConstructor // important
 @Service
 public class JwtUtil {
-
 
 
 	@Autowired
@@ -39,19 +35,36 @@ public class JwtUtil {
 
 	private WebClient authenticationServiceWebClient;
 
-	public Long verifyUser(String jwt) {
-		
+	public Optional<Long> verifyUser(String jwt) {
+
+		try{
+			Long userID = getAuthenticationServiceWebClient().post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwt).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse)).bodyToMono(UserValidationResponseDto.class).map((UserValidationResponseDto::getUserId)).block();
+			return Optional.of(userID);
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+
+		// if no userId found
 		return null;
 		
 	}
-	public static Long verifySeller(String jwt) {
+	public Optional<Long> verifySeller(String jwt) {
+
+//		SellerValidationDto sellerValidationDto = new SellerValidationDto();
+//		sellerValidationDto.setToken(jwt);
+
+		try{
+			Long sellerId = getAuthenticationServiceWebClient().post().uri("/seller/validate-token").header(HttpHeaders.AUTHORIZATION, jwt).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse)).bodyToMono(SellerValidationResponseDto.class).map((SellerValidationResponseDto::getSellerId)).block();
+			return Optional.of(sellerId);
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+
+		// if no sellerId found
 		return null;
 		
 	}
 	public  Optional<Long> verifyAdmin(String jwt) {
-		AdminValidationDto adminValidationDto = new AdminValidationDto();
-		adminValidationDto.setToken(jwt);
-
 
 		try{
 			Long adminId = getAuthenticationServiceWebClient().post().uri("/admin/validate-token").header(HttpHeaders.AUTHORIZATION, jwt).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse)).bodyToMono(AdminValidationResponseDto.class).map((AdminValidationResponseDto::getAdminId)).block();
@@ -67,8 +80,6 @@ public class JwtUtil {
 
 	// follow the singleton principle
 	private WebClient getAuthenticationServiceWebClient(){
-
-
 		return authenticationServiceWebClient == null ? builder.baseUrl(authenticationServiceBaseUrl).build() : authenticationServiceWebClient;
 
 	}

@@ -20,9 +20,11 @@ router.post("/seller/register", sellerController.registerSeller);
 
 router.post("/seller/login", sellerController.authenticateSeller);
 
+router.post("/seller/validate-token", sellerController.validateSellerToken);
+
 // new routes
 
-router.post("/users/validate-token", userController.validateUserToken);
+router.post("/user/validate-token", userController.validateUserToken);
 
 // export the express router
 module.exports = router;

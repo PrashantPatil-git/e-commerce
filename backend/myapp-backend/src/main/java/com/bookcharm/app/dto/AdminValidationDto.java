@@ -12,3 +12,4 @@ import lombok.Setter;
 public class AdminValidationDto {
     String token;
 }
+

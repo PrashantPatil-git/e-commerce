@@ -26,8 +26,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(Product product, String jwtToken) {
+
+        // validate the seller and add product in seller products
         // Add logic for product creation, validation, etc.
+
         return productRepository.save(product);
     }
 
@@ -55,7 +58,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Long productId) {
+    public boolean deleteProduct(Long productId, String jwtToken) {
+
+        // validate the seller based on jwtToken
+        // verify whether seller has product with ProductId
+        // else throw UnAuthorization Exception
+
         if (productRepository.existsById(productId)) {
             productRepository.deleteById(productId);
             return true;

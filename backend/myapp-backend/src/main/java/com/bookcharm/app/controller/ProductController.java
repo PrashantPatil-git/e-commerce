@@ -36,17 +36,14 @@ public class ProductController {
     
     //Seller will add Product
     @PostMapping
-    public ResponseEntity<?> AddProduct(@RequestBody Product product,@RequestHeader String jwt) {
-       Long sellerId =JwtUtil.verifySeller(jwt);
-    	if( sellerId !=null) {
-     		   productService.addProduct(product);
-    	
-    		return ResponseEntity.ok("Product Added SuccessFully");
-        }else {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
-        	
+    public ResponseEntity<?> AddProduct(@RequestBody Product product,@RequestHeader String Authorization) {
+
+    	try {
+            productService.addProduct(product, Authorization);
+            return ResponseEntity.ok("Product Added SuccessFully");
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
         }
-        
         
     }
 
@@ -63,17 +60,16 @@ public class ProductController {
     
     
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long productId,@RequestHeader String jwt) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId,@RequestHeader String Authorization) {
        
-    	Long sellerId =JwtUtil.verifySeller(jwt);
-    	if( sellerId !=null) {
-    		
-    		productService.deleteProduct(productId);
-    		return ResponseEntity.ok("Product Deleted SuccessFully");
-        }else {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
-        	
+    	try {
+            productService.deleteProduct(productId, Authorization);
+            return ResponseEntity.ok("Product Deleted SuccessFully");
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
         }
+
+
     }
 
     // Other ProductController methods

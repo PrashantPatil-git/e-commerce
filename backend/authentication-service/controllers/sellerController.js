@@ -31,3 +31,26 @@ exports.authenticateSeller = async (req, res) => {
     return res.status(401).json({ error: "Login failed: " + error.message });
   }
 };
+
+// validate seller based on jwt token and return sellerId
+
+exports.validateSellerToken = async (req, res) => {
+  // validate the token here
+
+  try {
+    const validateTokenResponse = await validateToken(req);
+
+    console.log(validateTokenResponse);
+
+    if (validateTokenResponse.success) {
+      return res
+        .status(200)
+        .send({ sellerId: parseInt(validateTokenResponse.id) });
+    } else {
+      return res.status(401).send({ message: validateTokenResponse.message });
+    }
+  } catch (error) {
+    console.log("error while validating seller");
+    return res.status(401).send({ message: "error while validating seller" });
+  }
+};
