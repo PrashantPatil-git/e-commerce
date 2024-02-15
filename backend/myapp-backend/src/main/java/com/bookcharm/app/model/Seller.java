@@ -25,6 +25,7 @@ public class Seller {
     private String email;
     @JoinColumn(name = "passWord")
     private String passWord;
+    
 
     // Constructors
     public Seller() {

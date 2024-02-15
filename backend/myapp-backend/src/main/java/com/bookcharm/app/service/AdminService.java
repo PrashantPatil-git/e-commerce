@@ -1,11 +1,16 @@
 package com.bookcharm.app.service;
 
+import java.util.List;
+
+import com.bookcharm.app.dto.UserLoginDto;
 import com.bookcharm.app.model.Admin;
+import com.bookcharm.app.model.Seller;
 
 public interface AdminService {
-    Admin getAdminById(Long adminId);
-    Admin createAdmin(Admin admin);
-    Admin updateAdmin(Long adminId, Admin admin);
-    boolean deleteAdmin(Long adminId);
+
+	String loginAdmin(UserLoginDto userLoginDto);
+
+	List<Seller> getAllSellers(String jwtToken);
+   
     // Other AdminService methods
 }
