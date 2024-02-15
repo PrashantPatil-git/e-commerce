@@ -6,9 +6,11 @@ import { useNavigate } from "react-router-dom";
 import User from "../../model/User";
 import sellerService from "../../service/seller.service";
 
-import { setCurrentUser } from "../../store/action/user.action";
+import { setCurrentSeller } from "../../store/action/seller.action";
 
 import { RotatingLines } from "react-loader-spinner";
+
+import { toast, ToastContainer } from "react-toastify";
 
 const SellerLogin = () => {
   // state for spinner button
@@ -26,9 +28,10 @@ const SellerLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const loginSeller = useSelector((state) => state.seller);
+  // const loginSeller = useSelector((state) => state.seller);
 
   const handleChange = (e) => {
+    setMessage("");
     const { name, value } = e.target;
 
     userLogin((prevState) => {
@@ -40,13 +43,14 @@ const SellerLogin = () => {
   };
 
   useEffect(() => {
-    if (loginSeller.seller) {
-      navigate("/sellerHome");
-    }
+    // if (loginSeller.seller) {
+    //   navigate("/sellerHome");
+    // }
   }, []);
 
   const loginSubmit = (e) => {
     e.preventDefault();
+    setShowSpinner(true);
     sellerService
       .login(login)
       .then((res) => {
@@ -55,16 +59,43 @@ const SellerLogin = () => {
         // save jwt token in local storage
         localStorage.setItem("token", res.data.token);
 
-        dispatch(setCurrentUser({ user: res.data.user }));
+        dispatch(setCurrentSeller({ seller: res.data.seller }));
 
         // navigate to the home page after user logs in successfully
         navigate("/sellerHome");
+        setShowSpinner(false);
       })
       .catch((error) => {
-        setMessage("invalid email and password");
-
         console.log(error);
+        setMessage("invalid email or password");
+        // notifyError("invalid emil or password");
+        setShowSpinner(false);
       });
+  };
+
+  // toast buttons
+  const notifyError = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notify = (msg) => {
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -143,6 +174,18 @@ const SellerLogin = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

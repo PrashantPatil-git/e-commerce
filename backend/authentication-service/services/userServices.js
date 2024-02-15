@@ -88,9 +88,6 @@ async function loginUser(req) {
   // email is validated in core application
   const { userId, userPassword, validationPassword } = req.body;
 
-  // find user with email and passWord
-  // if not return error
-  // else return JWT, and user
   try {
     const isPasswordValid = await bcrypt.compare(
       validationPassword,

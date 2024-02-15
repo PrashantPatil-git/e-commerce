@@ -1,9 +1,12 @@
 package com.bookcharm.app.controller;
 
 import com.bookcharm.app.dto.RegistrationResponse;
+import com.bookcharm.app.dto.SellerLoginDto;
 import com.bookcharm.app.dto.SellerRegistrationDto;
 import com.bookcharm.app.dto.SellerResponse;
+import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,21 @@ public class SellerController {
         catch (EmailAlreadyExistsException e) {
             return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginSeller(@RequestBody SellerLoginDto sellerLoginDto){
+
+        try{
+            SellerResponse sellerResponse = sellerService.loginSeller(sellerLoginDto);
+            return new ResponseEntity<SellerResponse>(sellerResponse, HttpStatus.OK);
+
+        }catch (UserNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found " + ex.getMessage());
+        }catch (AuthenticationFailedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
+        }
+
     }
 
     @PutMapping("/{sellerId}")

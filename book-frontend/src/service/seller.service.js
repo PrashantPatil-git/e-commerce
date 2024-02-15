@@ -15,6 +15,14 @@ class sellerService {
     });
   }
 
+  login(values) {
+    console.log(values);
+    return axios.post(API_URL + "/sellers/login", {
+      email: values.email,
+      passWord: values.passWord,
+    });
+  }
+
   getAllBooks() {
     return [
       { id: 1, title: "Book 1", author: "Author 1", price: 10, quantity: 5 },

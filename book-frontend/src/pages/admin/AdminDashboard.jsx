@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Button, Card, Container, Row, Col } from 'react-bootstrap';
-import sellerService from '../../service/seller.service';
-
+import React, { useState } from "react";
+import { Button, Card, Container, Row, Col } from "react-bootstrap";
+import sellerService from "../../service/seller.service";
 
 const AdminDashboard = () => {
   // Sample list of sellers, replace with actual data fetched from API or elsewhere
@@ -11,38 +10,41 @@ const AdminDashboard = () => {
 
   const onAccept = (sellerId) => {
     // Remove the seller with the given id from the list
-    const updatedSellers = sellers.map(seller => {
-      if (seller.id === sellerId) {
-        const updatedSeller = { ...seller, status: 'accepted' };
-        sellerService.updateSeller(updatedSeller); // Update seller status
-        return null; // Returning null to remove the seller from the list
-      }
-      return seller;
-    }).filter(Boolean); // Filter out null values
-    
+    const updatedSellers = sellers
+      .map((seller) => {
+        if (seller.id === sellerId) {
+          const updatedSeller = { ...seller, status: "accepted" };
+          sellerService.updateSeller(updatedSeller); // Update seller status
+          return null; // Returning null to remove the seller from the list
+        }
+        return seller;
+      })
+      .filter(Boolean); // Filter out null values
+
     setSellers(updatedSellers);
   };
 
   const onReject = (sellerId) => {
     // Remove the seller with the given id from the list
-    const updatedSellers = sellers.map(seller => {
-      if (seller.id === sellerId) {
-        const updatedSeller = { ...seller, status: 'rejected' };
-        sellerService.updateSeller(updatedSeller); // Update seller status
-        return null; // Returning null to remove the seller from the list
-      }
-      return seller;
-    }).filter(Boolean); // Filter out null values
-    
+    const updatedSellers = sellers
+      .map((seller) => {
+        if (seller.id === sellerId) {
+          const updatedSeller = { ...seller, status: "rejected" };
+          sellerService.updateSeller(updatedSeller); // Update seller status
+          return null; // Returning null to remove the seller from the list
+        }
+        return seller;
+      })
+      .filter(Boolean); // Filter out null values
+
     setSellers(updatedSellers);
   };
-  
 
   return (
     <Container>
       <h2>Sellers List</h2>
       <Row>
-        {sellers.map(seller => (
+        {sellers.map((seller) => (
           <Col key={seller.id} md={4}>
             <Card className="mb-3">
               <Card.Body>
@@ -50,18 +52,20 @@ const AdminDashboard = () => {
                 <Card.Text>Email: {seller.email}</Card.Text>
                 <Card.Text>Phone: {seller.phone}</Card.Text>
                 <div className="d-flex justify-content-between align-items-center">
-                  <Button variant="success" onClick={() => onAccept(seller.id)}>Accept</Button>
+                  <Button variant="success" onClick={() => onAccept(seller.id)}>
+                    Accept
+                  </Button>
                   <div className="mx-2"></div> {/* Add space between buttons */}
-                  <Button variant="danger" onClick={() => onReject(seller.id)}>Reject</Button>
+                  <Button variant="danger" onClick={() => onReject(seller.id)}>
+                    Reject
+                  </Button>
                 </div>
-                
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
     </Container>
-    
   );
 };
 

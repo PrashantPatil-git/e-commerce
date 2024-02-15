@@ -11,6 +11,7 @@ public interface SellerService {
     Seller createSeller(SellerRegistrationDto sellerRegistrationDto);
     Seller updateSeller(Long sellerId, Seller seller);
     boolean deleteSeller(Long sellerId);
+    SellerResponse loginSeller(SellerLoginDto sellerLoginDto);
     // Other SellerService methods
 	ResponseEntity<?> getAllUnVerifiedSellers(String jwtToken);
 }
