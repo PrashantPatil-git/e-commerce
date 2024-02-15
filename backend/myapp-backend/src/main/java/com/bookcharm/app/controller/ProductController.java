@@ -30,10 +30,12 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
+    
+    //Seller will add Product
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        // Add logic for creating a new product
+    public ResponseEntity<Product> AddProduct(@RequestBody Product product,@RequestHeader String jwt) {
+        
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.ok(createdProduct);
     }
