@@ -2,6 +2,8 @@ package com.bookcharm.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.List;
+
 import javax.persistence.*;
 import javax.websocket.ClientEndpoint;
 
@@ -16,6 +18,7 @@ public class Seller {
     @JoinColumn(name = "firstName")
     private String firstName;
     @JoinColumn(name = "lastName")
+    
     private String lastName;
     @JoinColumn(name = "panNumber")
     private String panNumber;
@@ -32,6 +35,9 @@ public class Seller {
 
     @JoinColumn(name = "isVerified")
     private boolean isVerified;
+    
+    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Product> products;
 
     // Constructors
     public Seller() {

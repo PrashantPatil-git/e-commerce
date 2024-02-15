@@ -53,6 +53,8 @@ public class Product {
 
     @Column(name = "isbn")
     private String isbn;
+    
+    
 
     // Constructors
     public Product() {
