@@ -5,6 +5,8 @@ const API_URL = BASE_API_URL + "/authenticate";
 
 class sellerService {
 
+
+
   register(values) {
     return axios.post(API_URL + "/seller/register", {
       firstName: values.firstName,
@@ -26,6 +28,11 @@ class sellerService {
      }
      deleteBook(id){
  
+     }
+
+     //admin will verify and to update verified seller this function is used
+     updateSeller(seller){
+
      }
   }
 
