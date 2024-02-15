@@ -4,23 +4,9 @@ import sellerService from "../../service/seller.service";
 
 const AdminDashboard = () => {
   // Sample list of sellers, replace with actual data fetched from API or elsewhere
-  const [sellers, setSellers] = useState([
-    {
-      id: 1,
-      name: "Seller 1",
-      email: "seller1@example.com",
-      phone: "123-456-7890",
-      status: "pending",
-    },
-    {
-      id: 2,
-      name: "Seller 2",
-      email: "seller2@example.com",
-      phone: "987-654-3210",
-      status: "pending",
-    },
-    // Add more sellers as needed
-  ]);
+  const [sellers, setSellers] = useState([]);
+
+   setSellers(sellerService.getAllUnVerifiedSeller());
 
   const onAccept = (sellerId) => {
     // Remove the seller with the given id from the list

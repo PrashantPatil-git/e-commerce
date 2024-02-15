@@ -36,4 +36,15 @@ class sellerService {
   updateSeller(seller) {}
 }
 
+getAllUnverifiedSellers() {
+ return [
+         { id: 1, name: 'Seller 1', email: 'seller1@example.com', phone: '123-456-7890', status: 'pending' },
+ 
+          { id: 2, name: 'Seller 2', email: 'seller2@example.com', phone: '987-654-3210', status: 'pending' },
+  ];
+
+}
+
+
+
 export default new sellerService();
