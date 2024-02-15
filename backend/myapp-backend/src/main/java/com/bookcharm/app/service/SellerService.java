@@ -1,11 +1,12 @@
 package com.bookcharm.app.service;
 
 import com.bookcharm.app.dto.SellerLoginDto;
-import org.springframework.http.ResponseEntity;
 
 import com.bookcharm.app.dto.SellerRegistrationDto;
 import com.bookcharm.app.dto.SellerResponse;
 import com.bookcharm.app.model.Seller;
+
+import java.util.List;
 
 public interface SellerService {
     Seller getSellerById(Long sellerId);
@@ -14,5 +15,5 @@ public interface SellerService {
     boolean deleteSeller(Long sellerId);
     SellerResponse loginSeller(SellerLoginDto sellerLoginDto);
     // Other SellerService methods
-	ResponseEntity<?> getAllUnVerifiedSellers(String jwtToken);
+	List<Seller> getAllUnVerifiedSellers(String jwtToken);
 }

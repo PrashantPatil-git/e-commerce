@@ -1,6 +1,6 @@
 package com.bookcharm.app.controller;
 
-import com.bookcharm.app.jwtVarifiaction.JwtUtil;
+import com.bookcharm.app.utils.JwtUtil;
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

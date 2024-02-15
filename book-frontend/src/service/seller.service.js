@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_API_URL } from "../common/constant";
+import { AuthHeader } from "./auth.header";
 
 const API_URL = BASE_API_URL;
 
@@ -36,9 +37,10 @@ class sellerService {
   updateSeller(seller) {}
 
   getAllUnverifiedSellers() {
-    // return axios.get(API_URL + "/sellers");
+    return axios.get(API_URL + "/sellers", { headers: AuthHeader() });
 
     // show an dummy data
+    /*
     return new Promise((resolve, error) => {
       resolve({
         unverifiedSellers: [
@@ -106,7 +108,9 @@ class sellerService {
           },
         ],
       });
+      
     });
+    */
   }
 }
 

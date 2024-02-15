@@ -11,7 +11,8 @@ const AdminDashboard = () => {
     sellerService
       .getAllUnverifiedSellers()
       .then((data) => {
-        setUnverifiedSellers(data.unverifiedSellers);
+        console.log(data.data);
+        setUnverifiedSellers(data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -52,26 +53,30 @@ const AdminDashboard = () => {
 
   return (
     <Container>
-      <h2>Sellers List</h2>
+      <h2>Unverified Sellers List</h2>
       <Row>
         {unverifiedSellers.map((unverifiedSeller) => (
           <Col key={unverifiedSeller.sellerID} md={4}>
             <Card className="mb-3">
               <Card.Body>
-                <Card.Title>{unverifiedSeller.firstName}</Card.Title>
+                <Card.Title>
+                  {unverifiedSeller.firstName} {unverifiedSeller.lastName}
+                </Card.Title>
                 <Card.Text>Email: {unverifiedSeller.email}</Card.Text>
                 <Card.Text>
                   Mobile Number: {unverifiedSeller.mobileNumber}
                 </Card.Text>
+                <Card.Text>Pan Number: {unverifiedSeller.panNumber}</Card.Text>
 
-                <div className="d-flex justify-content-between align-items-center">
+                {/* <div className="d-flex justify-content-between align-items-center"> */}
+                <div className="d-flex justify-content-between">
                   <Button
                     variant="success"
                     onClick={() => onAccept(unverifiedSeller.sellerId)}
                   >
                     Accept
                   </Button>
-                  <div className="mx-2"></div> {/* Add space between buttons */}
+                  {/* <div className="mx-2"></div> Add space between buttons */}
                   <Button
                     variant="danger"
                     onClick={() => onReject(unverifiedSeller.sellerId)}

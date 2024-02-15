@@ -1,14 +1,12 @@
 package com.bookcharm.app.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.bookcharm.app.dto.*;
-import com.bookcharm.app.exception.AuthenticationFailedException;
-import com.bookcharm.app.exception.ClientErrorException;
-import com.bookcharm.app.exception.EmailAlreadyExistsException;
-import com.bookcharm.app.exception.UserNotFoundException;
-import com.bookcharm.app.model.ShoppingCart;
-import com.bookcharm.app.model.User;
+import com.bookcharm.app.exception.*;
+import com.bookcharm.app.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +24,9 @@ import reactor.core.publisher.Mono;
 @Service
 public class SellerServiceImpl implements SellerService {
 
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -161,19 +162,19 @@ public class SellerServiceImpl implements SellerService {
     
     // Only admin will able to check un verified sellers
     @Override
-   	public ResponseEntity<?> getAllUnVerifiedSellers(String jwtToken) {
-   		
-       	
-       	Long adminId = authenticationServiceWebClient.post().uri("/users/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
-           handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
-           
-       	if(sellerRepository.existsById(adminId)) {
-       		
-       		return sellerRepository.getAllUnVerifiedSellers();
-       	
-       	}
-       	
-       	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNATHOURISED");
+   	public List<Seller> getAllUnVerifiedSellers(String jwtToken) {
+
+
+        Optional<Long> optionalAdminID = jwtUtil.verifyAdmin(jwtToken);
+
+        if(optionalAdminID.isPresent()){
+            Long adminID = optionalAdminID.get();
+            return sellerRepository.getAllUnVerifiedSellers();
+
+        }else{
+            throw new UnauthorizedAccessException("unauthorized");
+        }
+
    		
    	}
 

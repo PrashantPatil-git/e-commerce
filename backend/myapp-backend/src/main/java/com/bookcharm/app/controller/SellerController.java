@@ -4,15 +4,17 @@ import com.bookcharm.app.dto.RegistrationResponse;
 import com.bookcharm.app.dto.SellerLoginDto;
 import com.bookcharm.app.dto.SellerRegistrationDto;
 import com.bookcharm.app.dto.SellerResponse;
-import com.bookcharm.app.exception.AuthenticationFailedException;
-import com.bookcharm.app.exception.EmailAlreadyExistsException;
-import com.bookcharm.app.exception.UserNotFoundException;
+import com.bookcharm.app.exception.*;
 import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.service.SellerService;
+import com.bookcharm.app.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sellers")
@@ -20,6 +22,8 @@ public class SellerController {
 
     @Autowired
     private SellerService sellerService;
+
+
 
     @GetMapping("/{sellerId}")
     public ResponseEntity<Seller> getSellerById(@PathVariable Long sellerId) {
@@ -88,12 +92,24 @@ public class SellerController {
     	String jwtToken = Authorization;
 
         // authorize whether request is made by admin or not
-        
 
-    	
-    	ResponseEntity<?> sellers = sellerService.getAllUnVerifiedSellers(jwtToken);
-    	
-    	return sellers != null ? new ResponseEntity<>(sellers, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+
+            List<Seller> sellers = sellerService.getAllUnVerifiedSellers(jwtToken);
+            System.out.println(sellers);
+            return new ResponseEntity<>(sellers, HttpStatus.OK);
+        }catch(UnauthorizedAccessException e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch (ClientErrorException e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     	
     }
 

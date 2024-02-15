@@ -12,6 +12,8 @@ router.post("/user/login", userController.authenticateUser);
 
 router.post("/admin/login", adminController.authenticateAdmin);
 
+router.post("/admin/validate-token", adminController.validateAdminToken);
+
 // seller related routes
 
 router.post("/seller/register", sellerController.registerSeller);

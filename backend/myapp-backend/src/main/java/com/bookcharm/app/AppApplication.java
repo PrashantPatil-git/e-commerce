@@ -1,5 +1,6 @@
 package com.bookcharm.app;
 
+import com.bookcharm.app.utils.JwtUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -19,4 +20,11 @@ public class AppApplication {
 	public WebClient.Builder createWebClientBuilder(){
 		return WebClient.builder();
 	}
+
+	@Bean
+	public JwtUtil createJwtUtil(){
+		return new JwtUtil();
+	}
+
+
 }
