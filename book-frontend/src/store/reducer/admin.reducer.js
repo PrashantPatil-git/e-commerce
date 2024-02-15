@@ -1,19 +1,19 @@
-import { CLEAR_CURRENT_USER, SET_CURRENT_USER } from "../type";
+import { CLEAR_CURRENT_ADMIN, SET_CURRENT_ADMIN } from "../type";
 
-const userReducer = (state = {}, action) => {
+const adminReducer = (state = {}, action) => {
   switch (action?.type) {
-    case SET_CURRENT_USER:
+    case SET_CURRENT_ADMIN:
       localStorage.setItem("loginUser", JSON.stringify(action?.payload));
       return action?.payload;
 
-    case CLEAR_CURRENT_USER:
+    case CLEAR_CURRENT_ADMIN:
       localStorage.removeItem("loginUser");
       localStorage.removeItem("token");
       return null;
     default:
-      // if login user exists as a user
+      // if login admin exists as a admin
       if (localStorage.getItem("loginUser") !== null) {
-        return JSON.parse(localStorage.getItem("loginUser")).user === undefined
+        return JSON.parse(localStorage.getItem("loginUser")).admin === undefined
           ? null
           : JSON.parse(localStorage.getItem("loginUser"));
       } else {
@@ -22,4 +22,4 @@ const userReducer = (state = {}, action) => {
   }
 };
 
-export default userReducer;
+export default adminReducer;

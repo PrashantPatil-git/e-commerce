@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import User from "../../model/User";
 import adminService from "../../service/admin.service";
 
-import { setCurrentUser } from "../../store/action/user.action";
+import { setCurrentAdmin } from "../../store/action/admin.action";
 
 // importing spinner
 import { RotatingLines } from "react-loader-spinner";
@@ -30,6 +30,8 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const loginAdmin = useSelector((state) => state.admin);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -42,9 +44,10 @@ const AdminLogin = () => {
   };
 
   useEffect(() => {
-    // if (loginUser?.id) {
-    //   navigate("/adminDashboard");
-    // }
+    if (loginAdmin) {
+      navigate("/adminDashboard");
+    }
+    // console.log(loginAdmin);
   }, []);
 
   const loginSubmit = (e) => {
@@ -57,9 +60,11 @@ const AdminLogin = () => {
         // save jwt token in local storage
         console.log(res);
 
-        // localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.data.token);
 
         // dispatch(setCurrentUser({ user: res.data.user }));
+        dispatch(setCurrentAdmin({ admin: res.data.admin }));
+
         // hide the spinner
         setShowSpinner(false);
         // navigate to the home page after user logs in successfully

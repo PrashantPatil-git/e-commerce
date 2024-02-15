@@ -8,3 +8,7 @@ export const MINUS_CART = "MINUS_CART";
 // seller actions
 export const SET_CURRENT_SELLER = "SET_CURRENT_SELLER";
 export const CLEAR_CURRENT_SELLER = "CLEAR_CURRENT_SELLER";
+
+// admin actions
+export const SET_CURRENT_ADMIN = "SET_CURRENT_ADMIN";
+export const CLEAR_CURRENT_ADMIN = "CLEAR_CURRENT_ADMIN";

@@ -83,9 +83,13 @@ public class SellerController {
     
     
     @GetMapping
-    public ResponseEntity<?> getAllUnVerifiedSellers(@RequestHeader String authorization){
+    public ResponseEntity<?> getAllUnVerifiedSellers(@RequestHeader String Authorization){
     	
-    	String jwtToken = authorization;
+    	String jwtToken = Authorization;
+
+        // authorize whether request is made by admin or not
+        
+
     	
     	ResponseEntity<?> sellers = sellerService.getAllUnVerifiedSellers(jwtToken);
     	

@@ -34,17 +34,80 @@ class sellerService {
 
   //admin will verify and to update verified seller this function is used
   updateSeller(seller) {}
+
+  getAllUnverifiedSellers() {
+    // return axios.get(API_URL + "/sellers");
+
+    // show an dummy data
+    return new Promise((resolve, error) => {
+      resolve({
+        unverifiedSellers: [
+          {
+            sellerId: 1,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 3434,
+          },
+
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+          ,
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+          ,
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+          ,
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+          ,
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+          ,
+          {
+            sellerId: 2,
+            firstName: "Seller 1",
+            lastName: "lastName",
+            email: "seller1@example.com",
+            mobileNumber: "123-456-7890",
+            panNumber: 1222,
+          },
+        ],
+      });
+    });
+  }
 }
-
-getAllUnverifiedSellers() {
- return [
-         { id: 1, name: 'Seller 1', email: 'seller1@example.com', phone: '123-456-7890', status: 'pending' },
- 
-          { id: 2, name: 'Seller 2', email: 'seller2@example.com', phone: '987-654-3210', status: 'pending' },
-  ];
-
-}
-
-
 
 export default new sellerService();

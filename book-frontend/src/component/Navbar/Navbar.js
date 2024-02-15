@@ -1,9 +1,11 @@
 import { NavLink } from "react-bootstrap";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping, faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import '@fortawesome/fontawesome-free/css/all.css';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faCircleUser,
+} from "@fortawesome/free-solid-svg-icons";
+import "@fortawesome/fontawesome-free/css/all.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -14,7 +16,6 @@ import "./Navbar.css";
 import { clearCurrentUser } from "../../store/action/user.action";
 import cartService from "../../service/cart.service";
 import { useEffect, useState } from "react";
-
 
 const Navbar = () => {
   const loginUser = useSelector((u) => u.user);
@@ -95,8 +96,8 @@ const Navbar = () => {
                       Signup
                     </Link>
                   </li>
-                  <li className="nav-item btn btn-outline-warning" >
-                    <Link to="/sellerRegister" className="nav-link active" >
+                  <li className="nav-item btn btn-outline-warning">
+                    <Link to="/sellerRegister" className="nav-link active">
                       Become a seller
                     </Link>
                   </li>

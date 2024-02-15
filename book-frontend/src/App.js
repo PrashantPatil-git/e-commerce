@@ -19,8 +19,29 @@ import SellerHome from "./pages/seller/SellerHome";
 import "react-toastify/dist/ReactToastify.css";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { AdminLogin } from "./pages/admin/AdminLogin";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 function App() {
+  const loginUser = useSelector((state) => state.user);
+  const loginSeller = useSelector((state) => state.seller);
+  const loginAdmin = useSelector((state) => state.admin);
+
+  const [isUser, setIsUser] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // set the variables according to the type of user logged other wise all are false means visitor is performing actions
+    if (loginUser) {
+      setIsUser(true);
+    } else if (loginSeller) {
+      setIsSeller(true);
+    } else if (loginAdmin) {
+      setIsAdmin(true);
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -39,10 +60,22 @@ function App() {
         <Route path="/adminDashboard" element={<AdminDashboard />}></Route>
 
         {/* navigate the admin to the login page only if there is no user or admin is logged in */}
+
+        {/* if user || seller has logged in to the applicaton then person should not be able to view the admin login page */}
+        {/* and if admin is already stored in browser then directly show him dashboard */}
         <Route
           path="/admin-login"
-          // element={localStorage.loginUser === null? <AdminLogin/> : <Navigate to="/Home" />}
-          element={<AdminLogin />}
+          element={
+            !isSeller || !isUser ? (
+              isAdmin ? (
+                <AdminDashboard />
+              ) : (
+                <AdminLogin />
+              )
+            ) : (
+              <Navigate to="/Home" />
+            )
+          }
         ></Route>
       </Routes>
     </BrowserRouter>
