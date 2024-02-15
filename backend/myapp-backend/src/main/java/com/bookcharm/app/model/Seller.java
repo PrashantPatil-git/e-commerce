@@ -27,6 +27,7 @@ public class Seller {
     @JsonIgnore
     @JoinColumn(name = "passWord")
     private String passWord;
+    
 
 
     @JoinColumn(name = "isVerified")
