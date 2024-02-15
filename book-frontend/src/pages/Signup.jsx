@@ -80,7 +80,7 @@ const Signup = () => {
           })
           .catch((error) => {
             console.log(error);
-            if (error.response?.status === 400) {
+            if (error.response?.status === 409) {
               notifyError(error.response.data);
               setShowSpinner(false);
             }
@@ -230,74 +230,6 @@ const Signup = () => {
                     ) : null}
                   </div>
                 </div>
-
-                {/* Address related input tags */}
-
-                {/* 
-                <div className="form-group mt-3">
-                  <label>Address</label>
-                  <textarea
-                    rows="3"
-                    cols=""
-                    className="form-control"
-                    name="address"
-                    value={values.address}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  ></textarea>
-                  {errors.address && touched.address ? (
-                    <p className="text-danger">{errors.address}</p>
-                  ) : null}
-                </div>
-
-                <div className="row mt-3">
-                  <div className="col">
-                    <label>City</label>
-                    <input
-                      type="text"
-                      name="city"
-                      className="form-control form-control-sm"
-                      value={values.city}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.city && touched.city ? (
-                      <p className="text-danger">{errors.city}</p>
-                    ) : null}
-                  </div>
-                  <div className="col">
-                    <label>State</label>
-                    <input
-                      type="text"
-                      name="state"
-                      className="form-control form-control-sm"
-                      value={values.state}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.state && touched.state ? (
-                      <p className="text-danger">{errors.state}</p>
-                    ) : null}
-                  </div>
-
-                  <div className="col">
-                    <label>Pincode</label>
-                    <input
-                      type="number"
-                      name="pincode"
-                      className="form-control form-control-sm"
-                      value={values.pincode}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.pincode && touched.pincode ? (
-                      <p className="text-danger">{errors.pincode}</p>
-                    ) : null}
-                  </div>
-                </div>
-
-
-              */}
 
                 {showSpinner ? (
                   <div className="text-center mt-3">

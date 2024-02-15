@@ -1,8 +1,13 @@
 package com.bookcharm.app.controller;
 
+import com.bookcharm.app.dto.RegistrationResponse;
+import com.bookcharm.app.dto.SellerRegistrationDto;
+import com.bookcharm.app.dto.SellerResponse;
+import com.bookcharm.app.exception.EmailAlreadyExistsException;
 import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +28,19 @@ public class SellerController {
         }
     }
 
+
+    // post mapping on seller for registering the user
     @PostMapping
-    public ResponseEntity<Seller> createSeller(@RequestBody Seller seller) {
-        Seller createdSeller = sellerService.createSeller(seller);
-        return ResponseEntity.ok(createdSeller);
+    public ResponseEntity<?> createSeller(@RequestBody SellerRegistrationDto sellerRegistrationDto) {
+
+        try {
+            Seller seller = sellerService.createSeller(sellerRegistrationDto);
+            return ResponseEntity.ok("Seller Registration Request is under processing");
+        }
+
+        catch (EmailAlreadyExistsException e) {
+            return new ResponseEntity<>("Email address is already in use", HttpStatus.CONFLICT);
+        }
     }
 
     @PutMapping("/{sellerId}")
@@ -49,5 +63,4 @@ public class SellerController {
         }
     }
 
-    // Other SellerController methods
 }

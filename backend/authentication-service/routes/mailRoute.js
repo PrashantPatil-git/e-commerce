@@ -6,4 +6,9 @@ const mailController = require("../controllers/mailController");
 
 router.post("/user/send-welcome", mailController.sendWelcomeMailToNewUser);
 
+router.post(
+  "/seller/registration",
+  mailController.sendRegistrationMailToSeller
+);
+
 module.exports = router;
