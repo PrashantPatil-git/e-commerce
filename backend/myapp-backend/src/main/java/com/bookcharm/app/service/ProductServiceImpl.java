@@ -1,18 +1,22 @@
 package com.bookcharm.app.service;
 
-import com.bookcharm.app.model.Product;
-import com.bookcharm.app.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bookcharm.app.model.Product;
+import com.bookcharm.app.repository.ProductRepository;
+
 @Service
 public class ProductServiceImpl implements ProductService {
+	
+	
 
     @Autowired
     private ProductRepository productRepository;
+    
 
     @Override
     public List<Product> getAllProducts() {
@@ -29,7 +33,8 @@ public class ProductServiceImpl implements ProductService {
     public Product addProduct(Product product, String jwtToken) {
 
         // validate the seller and add product in seller products
-        // Add logic for product creation, validation, etc.
+       
+       
 
         return productRepository.save(product);
     }
@@ -63,6 +68,8 @@ public class ProductServiceImpl implements ProductService {
         // validate the seller based on jwtToken
         // verify whether seller has product with ProductId
         // else throw UnAuthorization Exception
+    	
+    	
 
         if (productRepository.existsById(productId)) {
             productRepository.deleteById(productId);

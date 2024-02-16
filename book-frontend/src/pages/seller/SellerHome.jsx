@@ -3,7 +3,28 @@ import Book from "../../model/Book";
 import sellerService from "../../service/seller.service";
 //import Book from './Book'; // Assuming you have a Book component
 
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+
+import { toast, ToastContainer } from "react-toastify";
+
+
+import { RotatingLines } from "react-loader-spinner";
+
 const SellerHome = () => {
+
+  
+const productValues = {
+  productName: "",
+  productDescription: "",
+  stock: "",
+  author: "",
+  productPrice: "",
+  productImage: "",
+  isbn: "",
+  category: "BOOK"
+};
+
   //storing the list of all books of seller
   const [books, setBooks] = useState([]);
   //for storing new new book that seller will add
@@ -11,25 +32,20 @@ const SellerHome = () => {
     new Book("", "", "", "", "", "", "", "", "", "", "")
   );
 
+  const navigate = useNavigate();
+
+   // state for spinner button
+
+   const [showSpinner, setShowSpinner] = useState(false);
+
+
   const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     setBooks(sellerService.getAllBooks());
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewBook({ ...newBook, [name]: value });
-  };
-
-  // function that will add new book
-  const handleAddBook = () => {
-    console.log(newBook);
-    sellerService.addBook(newBook);
-    setNewBook(new Book("", "", "", "", "", "", "", "", "", "", ""));
-    setShowAddForm(false);
-  };
-
+  
   const handleQuantityChange = (id, newQuantity) => {
     setBooks(
       books.map((book) =>
@@ -41,6 +57,57 @@ const SellerHome = () => {
   const handleDeleteBook = (id) => {
     setBooks(books.filter((book) => book.id !== id));
     sellerService.deleteBook(id);
+  };
+
+
+  const { values, errors, handleChange, handleSubmit, handleBlur, touched } =
+  useFormik({
+    initialValues: productValues,
+
+    onSubmit: (values, action) => {
+      setShowSpinner(true);
+      sellerService
+        .addProduct(values)
+        .then((res) => {
+          
+          notify(res);
+          notify("product added");
+          setShowSpinner(false);
+          setShowAddForm(true);
+
+        })
+        .catch((error) => {
+          console.log(error);
+
+          notifyError(error.response.data);
+          setShowSpinner(false);
+        });
+    },
+  });
+
+  // toast buttons
+  const notifyError = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notify = (msg) => {
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -108,9 +175,9 @@ const SellerHome = () => {
                 <input
                   type="text"
                   className="form-control"
-                  name="title"
-                  value={newBook.title}
-                  onChange={handleInputChange}
+                  name="productName"
+                  value={values.productName}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -120,8 +187,8 @@ const SellerHome = () => {
                   type="text"
                   className="form-control"
                   name="author"
-                  value={newBook.author}
-                  onChange={handleInputChange}
+                  value={values.author}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -130,9 +197,9 @@ const SellerHome = () => {
                 <input
                   type="text"
                   className="form-control"
-                  name="price"
-                  value={newBook.price}
-                  onChange={handleInputChange}
+                  name="productPrice"
+                  value={values.productPrice}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -141,19 +208,64 @@ const SellerHome = () => {
                 <input
                   type="text"
                   className="form-control"
-                  name="quantity"
-                  value={newBook.quantity}
-                  onChange={handleInputChange}
+                  name="stock"
+                  value={values.stock}
+                  onChange={handleChange}
                   required
                 />
               </div>
-              <button className="btn btn-success" onClick={handleAddBook}>
+              <div className="mb-3">
+                <label>Add Description:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="productDescription"
+                  value={values.productDescription}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label>isbn No:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="isbn"
+                  value={values.isbn}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label>Upload Image:</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="productImage"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <button className="btn btn-success" onClick={handleSubmit} >
                 Add Book
               </button>
             </div>
           )}
         </div>
       </div>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
