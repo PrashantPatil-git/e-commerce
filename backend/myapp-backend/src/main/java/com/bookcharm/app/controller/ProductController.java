@@ -1,5 +1,8 @@
 package com.bookcharm.app.controller;
 
+import com.bookcharm.app.exception.AuthenticationFailedException;
+import com.bookcharm.app.exception.ProductNotFoundException;
+import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.utils.JwtUtil;
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.service.ProductService;
@@ -48,29 +51,31 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestHeader String Authorization , @RequestBody Product product) {
         // Add logic for updating an existing product
-    	Product updatedProduct = productService.updateProduct(productId, product);
+    	Product updatedProduct = productService.updateProduct(productId, Authorization, product);
         if (updatedProduct != null) {
             return ResponseEntity.ok(updatedProduct);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    } else {
+        return ResponseEntity.notFound().build();
+    }
     }
     
     
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,@RequestHeader String Authorization) {
-       
-    	try {
+
+        try {
             productService.deleteProduct(productId, Authorization);
             return ResponseEntity.ok("Product Deleted SuccessFully");
-        }catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+        }catch (UserNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found " + ex.getMessage());
+        }catch (AuthenticationFailedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
+        }catch (ProductNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with given doesn't exist");
         }
-
 
     }
 
-    // Other ProductController methods
 }

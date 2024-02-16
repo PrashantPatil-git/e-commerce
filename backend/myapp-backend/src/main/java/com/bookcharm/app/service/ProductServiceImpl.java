@@ -88,7 +88,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long productId, Product updatedProduct) {
+    public Product updateProduct(Long productId, String sellerJwtToken, Product updatedProduct) {
+        
         Optional<Product> optionalProduct = productRepository.findById(productId);
         if (optionalProduct.isPresent()) {
             Product existingProduct = optionalProduct.get();

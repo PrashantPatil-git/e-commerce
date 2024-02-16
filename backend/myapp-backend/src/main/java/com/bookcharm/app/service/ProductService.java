@@ -8,7 +8,7 @@ public interface ProductService {
     List<Product> getAllProducts();
     Product getProductById(Long productId);
     
-    Product updateProduct(Long productId, Product product);
+    Product updateProduct(Long productId, String sellerJwtToken , Product product);
     boolean deleteProduct(Long productId, String Authorization);
     // Other ProductService methods
 	Product addProduct(Product product, String Authorization);
