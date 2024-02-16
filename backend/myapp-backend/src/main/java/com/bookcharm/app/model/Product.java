@@ -2,6 +2,7 @@ package com.bookcharm.app.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -164,7 +165,21 @@ public class Product {
 		this.isbn = isbn;
 	}
 
-    @Override
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return productId.equals(product.productId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productId);
+	}
+
+	@Override
     public String toString() {
         return "Product{" +
                 "productId=" + productId +

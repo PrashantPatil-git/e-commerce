@@ -38,6 +38,7 @@ public class JwtUtil {
 	public Optional<Long> verifyUser(String jwt) {
 
 		try{
+			
 			Long userID = getAuthenticationServiceWebClient().post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwt).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse -> handleClientError(clientResponse)).bodyToMono(UserValidationResponseDto.class).map((UserValidationResponseDto::getUserId)).block();
 			return Optional.of(userID);
 		}catch(Exception e){

@@ -121,6 +121,22 @@ public class Seller {
         isVerified = verified;
     }
 
+    public List<Product> getProducts(){
+        return this.products;
+    }
+
+    public void setProducts(List<Product> products){
+        this.products = products;
+    }
+
+    public void addProduct(Product product){
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product){
+        this.products.remove(product);
+    }
+
     @Override
     public String toString() {
         return "Seller{" +

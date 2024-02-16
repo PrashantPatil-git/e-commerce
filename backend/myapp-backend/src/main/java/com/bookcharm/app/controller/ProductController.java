@@ -36,7 +36,7 @@ public class ProductController {
     
     //Seller will add Product
     @PostMapping
-    public ResponseEntity<?> AddProduct(@RequestBody Product product,@RequestHeader String Authorization) {
+    public ResponseEntity<?> addProduct(@RequestBody Product product,@RequestHeader String Authorization) {
 
     	try {
             productService.addProduct(product, Authorization);

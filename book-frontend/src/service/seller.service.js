@@ -24,6 +24,18 @@ class sellerService {
     });
   }
 
+  addBook(book) {
+    return axios.post(
+      API_URL + "/products",
+      {
+        book: book,
+      },
+      {
+        headers: AuthHeader(),
+      }
+    );
+  }
+
   getAllBooks() {
     return [
       { id: 1, title: "Book 1", author: "Author 1", price: 10, quantity: 5 },
@@ -31,7 +43,11 @@ class sellerService {
       { id: 3, title: "Book 3", author: "Author 3", price: 20, quantity: 3 },
     ];
   }
-  deleteBook(id) {}
+  deleteBook(productId) {
+    return axios.delete(API_URL + `/products/${productId}`, {
+      headers: AuthHeader(),
+    });
+  }
 
   //admin will verify and to update verified seller this function is used
   updateSeller(seller) {}
