@@ -43,7 +43,11 @@ class sellerService {
       { id: 3, title: "Book 3", author: "Author 3", price: 20, quantity: 3 },
     ];
   }
-  deleteBook(id) {}
+  deleteBook(productId) {
+    return axios.delete(API_URL + `/products/${productId}`, {
+      headers: AuthHeader(),
+    });
+  }
 
   //admin will verify and to update verified seller this function is used
   updateSeller(seller) {}

@@ -1,5 +1,6 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.exception.ProductNotFoundException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
 import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.model.Category;
@@ -116,11 +117,49 @@ public class ProductServiceImpl implements ProductService {
         // verify whether seller has product with ProductId
         // else throw UnAuthorization Exception
 
-        if (productRepository.existsById(productId)) {
-            productRepository.deleteById(productId);
-            return true;
+        Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
+
+        // if seller exists
+        if(optionalSellerId.isPresent()){
+
+            Long sellerId = optionalSellerId.get();
+
+
+            // access the seller with that id
+            Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
+
+            if(optionalSeller.isPresent()){
+
+                Seller seller = optionalSeller.get();
+
+                // find the product with productId
+                Optional<Product> optionalProduct = productRepository.findById(productId);
+
+                if(optionalProduct.isPresent()){
+
+                    // validate whether product is related to seller
+                    // otherwise throw UnAuthorizedException
+                    Product product = optionalProduct.get();
+
+                    // remove product from seller
+                    if(!seller.getProducts().remove(product)){
+                        throw new UnauthorizedAccessException("Un authorized access");
+                    }else{
+                        sellerRepository.save(seller);
+                        return true;
+                    }
+                }else{
+                    // if product is not found return product not found exception
+                    throw new ProductNotFoundException("product with product id not found");
+                }
+            }else{
+                throw new UserNotFoundException("User not found exception");
+            }
+        }else{
+            throw new UserNotFoundException("User not found exception");
         }
-        return false;
+
+
     }
 
     // Add other ProductService methods if needed
