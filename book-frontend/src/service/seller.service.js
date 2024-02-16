@@ -86,6 +86,19 @@ class sellerService {
       }
     );
   }
+
+  addProduct(product){
+    console.log(product);
+    return axios.post(
+      API_URL + "/products",
+      {product},
+      {
+        headers: AuthHeader(),
+      }
+    );
+
+
+  }
 }
 
 export default new sellerService();

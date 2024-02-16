@@ -16,11 +16,20 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bookcharm.app.model.Product;
+import com.bookcharm.app.repository.ProductRepository;
+
 @Service
 public class ProductServiceImpl implements ProductService {
+	
+	
 
     @Autowired
     private ProductRepository productRepository;
+    
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -43,7 +52,8 @@ public class ProductServiceImpl implements ProductService {
     public Product addProduct(Product product, String jwtToken) {
 
         // validate the seller and add product in seller products
-        // Add logic for product creation, validation, etc.
+       
+       
 
 
 
@@ -67,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
                 newProduct.setSeller(seller);
                 newProduct.setStock(product.getStock());
                 newProduct.setViewCount(0);
-                newProduct.setProductImage("this is product image");
+                newProduct.setProductImage(product.getProductImage());
 
                 seller.addProduct(newProduct);
 
@@ -117,6 +127,8 @@ public class ProductServiceImpl implements ProductService {
         // validate the seller based on jwtToken
         // verify whether seller has product with ProductId
         // else throw UnAuthorization Exception
+    	
+    	
 
         Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
 

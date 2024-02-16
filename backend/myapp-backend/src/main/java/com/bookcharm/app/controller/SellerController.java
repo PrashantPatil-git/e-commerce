@@ -104,7 +104,8 @@ public class SellerController {
     	
     	String jwtToken = Authorization;
 
-        // authorize whether request is made by admin or not
+       
+    	
 
         try {
 
