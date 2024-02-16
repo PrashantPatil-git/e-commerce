@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import sellerService from "../../service/seller.service";
 
+import { useNavigate } from "react-router-dom";
+
+import { toast, ToastContainer } from "react-toastify";
+
 const AdminDashboard = () => {
   // Sample list of sellers, replace with actual data fetched from API or elsewhere
   const [unverifiedSellers, setUnverifiedSellers] = useState([]);
+
+  const navigate = useNavigate();
 
   // set all unverifed sellers
   useEffect(() => {
@@ -15,24 +21,34 @@ const AdminDashboard = () => {
         setUnverifiedSellers(data.data);
       })
       .catch((err) => {
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+        notifyError("unauthorize request");
+
         console.log(err);
       });
   }, []);
 
   const onAccept = (sellerId) => {
     // Remove the seller with the given id from the list
-    const updatedSellers = unverifiedSellers
-      .map((unverifiedSeller) => {
-        if (unverifiedSeller.sellerID === sellerId) {
-          const updatedSeller = { ...unverifiedSeller, status: "accepted" };
-          sellerService.updateSeller(updatedSeller); // Update seller status
-          return null; // Returning null to remove the seller from the list
-        }
-        return unverifiedSeller;
-      })
-      .filter(Boolean); // Filter out null values
 
-    setUnverifiedSellers(updatedSellers);
+    sellerService
+      .verifySeller(sellerId)
+      .then((data) => {
+        notify(`seller with ${sellerId} removed successfully`);
+        // update the unverified sellers list
+        const updatedSellers = unverifiedSellers.filter(
+          (unverifiedSeller) => unverifiedSeller.sellerID !== sellerId
+        );
+
+        console.log(updatedSellers);
+        // set updatedSellers as new state
+        setUnverifiedSellers(updatedSellers);
+      })
+      .catch((error) => {
+        notifyError("error while removing seller");
+      });
   };
 
   const onReject = (sellerId) => {
@@ -49,6 +65,31 @@ const AdminDashboard = () => {
       .filter(Boolean); // Filter out null values
 
     setUnverifiedSellers(updatedSellers);
+  };
+
+  // toast buttons
+  const notifyError = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notify = (msg) => {
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -89,6 +130,18 @@ const AdminDashboard = () => {
           </Col>
         ))}
       </Row>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Container>
   );
 };

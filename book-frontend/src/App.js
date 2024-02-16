@@ -65,17 +65,18 @@ function App() {
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
         <Route
           path="/adminDashboard"
-          element={
-            !isSeller && !isUser ? (
-              isAdmin ? (
-                <AdminDashboard />
-              ) : (
-                <AdminLogin />
-              )
-            ) : (
-              <Navigate to="/Home" />
-            )
-          }
+          // element={
+          //   !isSeller && !isUser ? (
+          //     isAdmin ? (
+          //       <AdminDashboard />
+          //     ) : (
+          //       <AdminLogin />
+          //     )
+          //   ) : (
+          //     <Navigate to="/Home" />
+          //   )
+          // }
+          element={<AdminDashboard />}
         ></Route>
 
         {/* navigate the admin to the login page only if there is no user or admin is logged in */}

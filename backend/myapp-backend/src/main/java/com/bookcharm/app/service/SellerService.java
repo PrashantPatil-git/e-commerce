@@ -11,7 +11,7 @@ import java.util.List;
 public interface SellerService {
     Seller getSellerById(Long sellerId);
     Seller createSeller(SellerRegistrationDto sellerRegistrationDto);
-    Seller updateSeller(Long sellerId, Seller seller);
+    Seller verifySeller(Long sellerId, String adminJwtToken);
     boolean deleteSeller(Long sellerId);
     SellerResponse loginSeller(SellerLoginDto sellerLoginDto);
     // Other SellerService methods

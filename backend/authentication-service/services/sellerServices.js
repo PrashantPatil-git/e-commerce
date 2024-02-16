@@ -18,6 +18,8 @@ const register = async (req) => {
     // validate the credentials
 
     // validate email
+
+    /*
     const emailValidationResult = await validateEmail(email);
     console.log(emailValidationResult);
 
@@ -28,6 +30,7 @@ const register = async (req) => {
         message: "Invalid email address",
       };
     }
+    */
 
     // Hash the password
     const hashedPassword = await hashPassword(passWord);

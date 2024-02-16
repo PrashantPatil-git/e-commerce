@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BASE_API_URL } from "../common/constant";
 
+import { AuthHeader } from "./auth.header";
+
 const API_URL = BASE_API_URL;
 
 class adminService {
@@ -10,6 +12,8 @@ class adminService {
       passWord: user.passWord,
     });
   }
+
+  
 }
 
 export default new adminService();

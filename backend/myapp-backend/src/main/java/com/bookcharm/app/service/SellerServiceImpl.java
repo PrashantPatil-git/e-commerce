@@ -133,22 +133,33 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller updateSeller(Long sellerId, Seller updatedSeller) {
-        Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
-        if (optionalSeller.isPresent()) {
-            Seller existingSeller = optionalSeller.get();
-            // Update the existing seller with the new information
-            existingSeller.setFirstName(updatedSeller.getFirstName());
-            existingSeller.setLastName(updatedSeller.getLastName());
-            existingSeller.setPanNumber(updatedSeller.getPanNumber());
-            existingSeller.setMobileNumber(updatedSeller.getMobileNumber());
-            existingSeller.setEmail(updatedSeller.getEmail());
-            existingSeller.setPassWord(updatedSeller.getPassWord());
+    public Seller verifySeller(Long sellerId, String jwtToken) {
 
-            // Save and return the updated seller
-            return sellerRepository.save(existingSeller);
+
+        Optional<Long> optionalAdminId  = jwtUtil.verifyAdmin(jwtToken);
+
+        if(optionalAdminId.isPresent()){
+
+            // find seller with id to modify it's state
+            Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
+
+            if (optionalSeller.isPresent()) {
+
+                Seller existingSeller = optionalSeller.get();
+                // mark the existing seller as verified seller
+               existingSeller.setVerified(true);
+                // Save and return the updated seller
+                return sellerRepository.save(existingSeller);
+            }else {
+
+                throw new UserNotFoundException("Seller with this id not found");
+            }
+
+        }else{
+            throw new UnauthorizedAccessException("unauthorized access to resource");
         }
-        return null;
+
+
     }
 
     @Override

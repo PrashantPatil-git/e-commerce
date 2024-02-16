@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,14 +66,26 @@ public class SellerController {
 
     }
 
-    @PutMapping("/{sellerId}")
-    public ResponseEntity<Seller> updateSeller(@PathVariable Long sellerId, @RequestBody Seller seller) {
-        Seller updatedSeller = sellerService.updateSeller(sellerId, seller);
-        if (updatedSeller != null) {
-            return ResponseEntity.ok(updatedSeller);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PutMapping("/seller/{sellerId}")
+    public ResponseEntity<?> verifySeller(@RequestHeader String Authorization,  @PathVariable Long sellerId) {
+
+        String adminJwtToken = Authorization;
+        System.out.println(sellerId + ", " + adminJwtToken);
+        try{
+            Seller updatedSeller = sellerService.verifySeller(sellerId, adminJwtToken);
+            if (updatedSeller != null) {
+                return ResponseEntity.ok(updatedSeller);
+            }
+
+        }catch (UserNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found " + ex.getMessage());
+        }catch (AuthenticationFailedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
         }
+
+        return ResponseEntity.internalServerError().body("Internal server error");
+
+
     }
 
     @DeleteMapping("/{sellerId}")

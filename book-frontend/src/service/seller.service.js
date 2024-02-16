@@ -51,66 +51,24 @@ class sellerService {
             email: "seller1@example.com",
             mobileNumber: "123-456-7890",
             panNumber: 3434,
-          },
-
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
-          ,
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
-          ,
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
-          ,
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
-          ,
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
-          ,
-          {
-            sellerId: 2,
-            firstName: "Seller 1",
-            lastName: "lastName",
-            email: "seller1@example.com",
-            mobileNumber: "123-456-7890",
-            panNumber: 1222,
-          },
+          }
         ],
       });
       
     });
     */
+  }
+
+  // verify the admin using token and send seller id as query string
+  verifySeller(sellerId) {
+    // for axios.put , second paramter is data, and third is config
+    return axios.put(
+      API_URL + `/sellers/seller/${sellerId}`,
+      {},
+      {
+        headers: AuthHeader(),
+      }
+    );
   }
 }
 

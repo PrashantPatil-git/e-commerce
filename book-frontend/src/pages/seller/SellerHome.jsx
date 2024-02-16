@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import Book from '../../model/Book';
-import sellerService from '../../service/seller.service';
+import React, { useEffect, useState } from "react";
+import Book from "../../model/Book";
+import sellerService from "../../service/seller.service";
 //import Book from './Book'; // Assuming you have a Book component
 
 const SellerHome = () => {
-    //storing the list of all books of seller
+  //storing the list of all books of seller
   const [books, setBooks] = useState([]);
   //for storing new new book that seller will add
-  const [newBook, setNewBook] = useState(new Book("","","","","","","","","","",""));
+  const [newBook, setNewBook] = useState(
+    new Book("", "", "", "", "", "", "", "", "", "", "")
+  );
 
   const [showAddForm, setShowAddForm] = useState(false);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setBooks(sellerService.getAllBooks());
-
-
-  },[]);
-
-  
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,10 +24,9 @@ const SellerHome = () => {
 
   // function that will add new book
   const handleAddBook = () => {
-    
-    console.log(newBook)
+    console.log(newBook);
     sellerService.addBook(newBook);
-    setNewBook(new Book("","","","","","","","","","",""));
+    setNewBook(new Book("", "", "", "", "", "", "", "", "", "", ""));
     setShowAddForm(false);
   };
 
@@ -70,14 +66,18 @@ const SellerHome = () => {
                   <td>
                     <button
                       className="btn btn-sm btn-dark me-1"
-                      onClick={() => handleQuantityChange(book.id, book.quantity - 1)}
+                      onClick={() =>
+                        handleQuantityChange(book.id, book.quantity - 1)
+                      }
                     >
                       -
                     </button>
                     {book.quantity}
                     <button
                       className="btn btn-sm btn-dark ms-1"
-                      onClick={() => handleQuantityChange(book.id, book.quantity + 1)}
+                      onClick={() =>
+                        handleQuantityChange(book.id, book.quantity + 1)
+                      }
                     >
                       +
                     </button>
@@ -94,7 +94,10 @@ const SellerHome = () => {
               ))}
             </tbody>
           </table>
-          <button className="btn btn-primary" onClick={() => setShowAddForm(true)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowAddForm(true)}
+          >
             Add New Book
           </button>
           {showAddForm && (
@@ -108,6 +111,7 @@ const SellerHome = () => {
                   name="title"
                   value={newBook.title}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -118,6 +122,7 @@ const SellerHome = () => {
                   name="author"
                   value={newBook.author}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -128,6 +133,7 @@ const SellerHome = () => {
                   name="price"
                   value={newBook.price}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -138,6 +144,7 @@ const SellerHome = () => {
                   name="quantity"
                   value={newBook.quantity}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
               <button className="btn btn-success" onClick={handleAddBook}>
