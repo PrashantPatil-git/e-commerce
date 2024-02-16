@@ -3,7 +3,17 @@ import "../css/productDetails.css";
 
 import genericbook from "../generic-book.jpg";
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = ({ product, addToCart }) => {
+
+
+    
+  const handleAddToCart = (productId, quantity) => {
+    alert(productId, quantity);
+    addToCart(productId, quantity);
+  };
+
+  const handlePlaceOrder = () => {};
+
   return (
     <div className="product-card">
       <div>
@@ -22,17 +32,31 @@ const ProductDetails = ({ product }) => {
               <strong>Price:</strong> ${product.productPrice}
             </p>
             <p>
-              <strong>Category:</strong> {product.category}
+              <strong>Category:</strong> {product.category.categoryType}
             </p>
             <p>
               <strong>Author:</strong> {product.author}
             </p>
             <p>
-              <strong>ISBN:</strong> {product.ISBN}
+              <strong>ISBN:</strong> {product.isbn}
+            </p>
+            <p>
+              <strong>Views:</strong> {product.viewCount}
             </p>
           </div>
           <div>
-            <button>Add to Cart</button>
+            <button
+              className="btn btn-primary mr-2"
+              onClick={() => handleAddToCart(product.productId, 1)}
+            >
+              Add to Cart
+            </button>
+            <button
+              className="btn btn-success m-2"
+              onClick={() => handleAddToCart()}
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>

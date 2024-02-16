@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/shopping-carts")
+@RequestMapping("/shopping-carts")
 public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<ShoppingCart> getShoppingCartByUserId(@RequestHeader String Authorization) {
 
 
@@ -36,7 +36,7 @@ public class ShoppingCartController {
 
     }
 
-    @PutMapping(name = "/shopping-cart")
+    @PutMapping
     public ResponseEntity<Void> updateShoppingCart(HttpServletRequest request, @RequestBody CartDto cartDto){
 
 
