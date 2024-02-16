@@ -1,18 +1,14 @@
 import axios from "axios";
 import { BASE_API_URL } from "../common/constant";
 
-const API_URL = BASE_API_URL + "/api/book";
+const API_URL = BASE_API_URL + "/products";
 
 class BookService {
   saveBook(book) {
     return axios.post(API_URL + "/", book);
   }
   getAllBook() {
-    return [
-      { image: "rushi", id: 2, title: "RushiT" },
-      { image: "rushi", id: 2, title: "RushiT" },
-    ];
-    //return axios.get(API_URL + "/");
+    return axios.get(API_URL);
   }
 
   getBookById(id) {
