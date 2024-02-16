@@ -87,17 +87,25 @@ class sellerService {
     );
   }
 
-  addProduct(product){
+  addProduct(product) {
     console.log(product);
     return axios.post(
       API_URL + "/products",
-      {product},
+      {
+        productName: product.productName,
+        productDescription: product.productDescription,
+        productPrice: product.productPrice,
+        stock: product.stock,
+        productImage: product.productImage,
+        category: product.productCategory || "BOOK",
+        author: product.author,
+        isbn: product.isbn,
+      },
+
       {
         headers: AuthHeader(),
       }
     );
-
-
   }
 }
 

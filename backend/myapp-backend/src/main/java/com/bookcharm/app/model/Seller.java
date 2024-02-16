@@ -36,7 +36,7 @@ public class Seller {
     @JoinColumn(name = "isVerified")
     private boolean isVerified;
     
-    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Product> products;
 
     // Constructors

@@ -1,4 +1,5 @@
 const sellerService = require("../services/sellerServices");
+const { validateToken } = require("../authentication/validateToken");
 
 // function to register the seller
 exports.registerSeller = async (req, res) => {

@@ -1,5 +1,6 @@
 package com.bookcharm.app.controller;
 
+import com.bookcharm.app.dto.AddProductDto;
 import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.ProductNotFoundException;
 import com.bookcharm.app.exception.UserNotFoundException;
@@ -39,15 +40,18 @@ public class ProductController {
     
     //Seller will add Product
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody Product product,@RequestHeader String Authorization) {
+    public ResponseEntity<?> addProduct(@RequestBody AddProductDto addProductDto, @RequestHeader String Authorization) {
 
+
+        System.out.println(addProductDto);
     	try {
-            productService.addProduct(product, Authorization);
+            productService.addProduct(addProductDto, Authorization);
             return ResponseEntity.ok("Product Added SuccessFully");
-        }catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+        }catch (AuthenticationFailedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
         }
-        
+
+
     }
 
     @PutMapping("/{productId}")

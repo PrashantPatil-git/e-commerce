@@ -1,11 +1,13 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.dto.AddProductDto;
 import com.bookcharm.app.exception.ProductNotFoundException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
 import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.model.Category;
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.model.Seller;
+import com.bookcharm.app.repository.CategoryRepository;
 import com.bookcharm.app.repository.ProductRepository;
 import com.bookcharm.app.repository.SellerRepository;
 import com.bookcharm.app.utils.JwtUtil;
@@ -29,6 +31,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
     
 
     @Autowired
@@ -49,13 +54,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product, String jwtToken) {
+    public Product addProduct(AddProductDto addProductDto, String jwtToken) {
 
         // validate the seller and add product in seller products
-       
-       
-
-
 
         Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
 
@@ -68,19 +69,27 @@ public class ProductServiceImpl implements ProductService {
 
                 Product newProduct = new Product();
 
-                newProduct.setProductName(product.getProductName());
-                newProduct.setProductPrice(product.getProductPrice());
-                newProduct.setProductDescription(product.getProductDescription());
-                newProduct.setAuthor(product.getAuthor());
-                newProduct.setCategory(new Category("BOOK"));
-                newProduct.setIsbn(product.getIsbn());
+                // set Book category as by default
+                // Book category has id 1 by default
+                Optional<Category> optionalCategory = categoryRepository.findById(1l);
+
+                Category category = optionalCategory.get();
+
+
+                newProduct.setProductName(addProductDto.getProductName());
+                newProduct.setProductPrice(addProductDto.getProductPrice());
+                newProduct.setProductDescription(addProductDto.getProductDescription());
+                newProduct.setAuthor(addProductDto.getAuthor());
+                newProduct.setCategory(category);
+                newProduct.setIsbn(addProductDto.getIsbn());
                 newProduct.setSeller(seller);
-                newProduct.setStock(product.getStock());
+                newProduct.setStock(addProductDto.getStock());
                 newProduct.setViewCount(0);
-                newProduct.setProductImage(product.getProductImage());
+//                newProduct.setProductImage(addProductDto.getProductImage());
 
                 seller.addProduct(newProduct);
 
+                productRepository.save(newProduct);
                 sellerRepository.save(seller);
 
                 return newProduct;
