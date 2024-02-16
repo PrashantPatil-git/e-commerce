@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
                 newProduct.setSeller(seller);
                 newProduct.setStock(product.getStock());
                 newProduct.setViewCount(0);
-                newProduct.setProductImage("this is product image");
+                newProduct.setProductImage(product.getProductImage());
 
                 seller.addProduct(newProduct);
 
