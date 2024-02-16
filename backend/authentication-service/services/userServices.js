@@ -19,7 +19,6 @@ async function createUser(req) {
 
   console.log(email, passWord);
 
-  /*
   // validate email
   const emailValidationResult = await validateEmail(email);
   console.log(emailValidationResult);
@@ -32,7 +31,6 @@ async function createUser(req) {
     };
   }
 
-  */
   // validate mobileNumber if exists
 
   // validate address if exists

@@ -112,7 +112,7 @@ const validateEmail = async (userEmail) => {
       `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.ABSTRACTAPI_API_KEY}&email=${userEmail}`
     );
 
-    if (response.data.deliverability === "DELIVERABLE") {
+    if (response.deliverability === "DELIVERABLE") {
       return true;
     } else {
       return false;

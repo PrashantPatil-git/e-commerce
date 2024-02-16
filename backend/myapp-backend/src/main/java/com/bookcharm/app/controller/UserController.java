@@ -2,6 +2,7 @@ package com.bookcharm.app.controller;
 import com.bookcharm.app.dto.*;
 import com.bookcharm.app.exception.AuthenticationFailedException;
 import com.bookcharm.app.exception.EmailAlreadyExistsException;
+import com.bookcharm.app.exception.InvalidEmailException;
 import com.bookcharm.app.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found " + ex.getMessage());
         }catch (AuthenticationFailedException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed " + ex.getMessage());
+        }catch (InvalidEmailException ex){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Authentication Failed : " + ex.getMessage());
         }
 
     }

@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
         }
         return false; // User with the given ID does not exist
     }
+
 //    @Override
 //    public void addToCart(Long userId, Long productId, Integer quantity) {
 //        User user = userRepository.findById(userId).orElse(null);
@@ -231,6 +232,10 @@ public class UserServiceImpl implements UserService {
         // through an error when user password not matched with passed password
         if(clientResponse.statusCode().equals(HttpStatus.UNAUTHORIZED)){
             return Mono.error(new AuthenticationFailedException("password not match"));
+        }
+
+        if(clientResponse.statusCode().equals(HttpStatus.CONFLICT)){
+            return Mono.error(new InvalidEmailException("Invalid email provided"));
         }
 
         return Mono.error(new ClientErrorException("Client Error: " + clientResponse.statusCode()));
