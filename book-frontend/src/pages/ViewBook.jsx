@@ -8,7 +8,20 @@ import cartService from "../service/cart.service";
 import { ToastContainer, toast } from "react-toastify";
 import { BASE_API_URL } from "../common/constant";
 
+import BookCard from "./BookCard";
+
 const ViewBook = () => {
+  const product = {
+    productName: "Sample Book",
+    productPrice: 10.99,
+    productImage: null,
+    productDescription:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    category: "Fiction",
+    author: "John Doe",
+    ISBN: "978-3-16-148410-0",
+  };
+
   const [cart, setCart] = useState({
     book: "",
     user: "",
@@ -72,12 +85,12 @@ const ViewBook = () => {
           init();
         })
         .catch((error) => {
-          
           console.log(error);
         });
     }
   };
 
+  /*
   return (
     <div className="container p-3">
       <div className="row">
@@ -156,6 +169,13 @@ const ViewBook = () => {
         pauseOnHover
       />
     </div>
+  );
+*/
+
+  return (
+    <>
+      <BookCard product={product} />
+    </>
   );
 };
 

@@ -11,20 +11,20 @@ class BookService {
     return axios.get(API_URL);
   }
 
-  getBookById(id) {
-    return {
-      id: 1,
-      bookName: "bookName",
-      description: "description",
-      author: "author",
-      categorysId: "categorysId",
-      isbnNo: "isbnNo",
-      language: "language",
-      price: 50,
-      img: "img",
-      category: "category",
-    };
-    //return axios.get(API_URL + "/" + id);
+  getBookById(productId) {
+    // return {
+    //   id: 1,
+    //   bookName: "bookName",
+    //   description: "description",
+    //   author: "author",
+    //   categorysId: "categorysId",
+    //   isbnNo: "isbnNo",
+    //   language: "language",
+    //   price: 50,
+    //   img: "img",
+    //   category: "category",
+    // };
+    return axios.get(`${API_URL}/${productId}`);
   }
 
   updateBook(book) {

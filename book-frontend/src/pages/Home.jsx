@@ -3,10 +3,23 @@ import { Link } from "react-router-dom";
 import { Footer } from "../component/footer/Footer";
 import BookService from "../service/book.service";
 
-import genericbook from "../generic-book.jpg";
+import BookCard from "./BookCard";
+
+import "../css/homePage.css";
 
 const Home = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState([
+    {
+      productName: "Sample Book",
+      productPrice: 10.99,
+      productImage: "sample.jpg",
+      productDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      category: "Fiction",
+      author: "John Doe",
+      ISBN: "978-3-16-148410-0",
+    },
+  ]);
 
   useEffect(() => {
     // Fetch books data from the server
@@ -22,8 +35,19 @@ const Home = () => {
 
   return (
     <div>
+      <div className="book-cards">
+        {books.map((book) => (
+          <>
+            <BookCard key={book.productId} product={book} />
+            <BookCard key={book.productId} product={book} />
+          </>
+        ))}
+      </div>
+
       {/* Your carousel code */}
-      <div className="container">
+
+      {/* 
+      <div className="container mt-5">
         <p className="fs-3 text-center">Books</p>
         <div className="row">
           {books.map((book) => (
@@ -37,25 +61,33 @@ const Home = () => {
                     alt={book.title}
                   />
 
-                  <p className="fs-5">{book.productName}</p>
-                  <Link
-                    to={`/ViewBook/${book.productId}`}
-                    className="btn btn-sm btn-primary"
-                  >
-                    View Details
-                  </Link>
-                  <Link
-                    to={`/ViewBook/${book.productPrice}`}
-                    className="btn btn-sm btn-danger ms-2"
-                  >
-                    {book.productPrice}
-                  </Link>
+                  <div>
+                    <p className="fs-5">
+                      <b>Name : </b>
+                      {book.productName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="fs-5">
+                      <b>Price : </b>
+                      {book.productPrice}
+                    </p>
+                  </div>
+                  <div>
+                    <Link
+                      to={`/book/${book.productId}`}
+                      className="btn btn-sm btn-primary"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+       */}
     </div>
   );
 };
