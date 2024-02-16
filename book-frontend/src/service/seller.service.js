@@ -24,6 +24,18 @@ class sellerService {
     });
   }
 
+  addBook(book) {
+    return axios.post(
+      API_URL + "/products",
+      {
+        book: book,
+      },
+      {
+        headers: AuthHeader(),
+      }
+    );
+  }
+
   getAllBooks() {
     return [
       { id: 1, title: "Book 1", author: "Author 1", price: 10, quantity: 5 },
