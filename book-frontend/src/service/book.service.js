@@ -14,15 +14,17 @@ class BookService {
   getBookById(productId) {
     // return {
     //   id: 1,
-    //   bookName: "bookName",
-    //   description: "description",
+    //   productName: "bookName",
+    //   productDescription: "description",
     //   author: "author",
-    //   categorysId: "categorysId",
-    //   isbnNo: "isbnNo",
-    //   language: "language",
-    //   price: 50,
-    //   img: "img",
-    //   category: "category",
+    //   // categorysId: "categorysId",
+    //   isbn: "isbnNo",
+    //   // language: "language",
+    //   productPrice: 200,
+    //   productImage: null,
+    //   category: {
+    //     type: "BOOK",
+    //   },
     // };
     return axios.get(`${API_URL}/${productId}`);
   }

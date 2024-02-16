@@ -2,14 +2,29 @@ import React, { useEffect } from "react";
 import "../css/bookCard.css";
 import genericbook from "../generic-book.jpg";
 
+import { useNavigate } from "react-router-dom";
+
 const Card = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleOnClick = async (productId, productName) => {
+    // alert(productId)
+    console.log(productId);
+    const id = productId;
+    navigate(`/book/${productName}/${id}`);
+    // navigate("/admin-login");
+  };
+
   return (
-    <div className="card">
+    <div
+      className="book-card"
+      onClick={() => handleOnClick(product.productId, product.productName)}
+    >
       <img
         src={product.productImage ? product.productImage : genericbook}
         alt={product.productName}
       />
-      <div className="card-body">
+      <div className="book-card-body">
         <h2>{product.productName}</h2>
         <p>{product.productDescription}</p>
         <p>

@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { BASE_API_URL } from "../common/constant";
 
 import BookCard from "./BookCard";
+import ProductDetails from "./ProductDetails";
 
 const ViewBook = () => {
   const product = {
@@ -46,14 +47,28 @@ const ViewBook = () => {
     try {
       let bk = await bookService.getBookById(id);
       console.log(bk);
-      setBook(bk);
 
-      cart.book = bk.data;
-      cart.user = user;
+      setBook({
+        id: 1,
+        productName: "bookName",
+        productDescription: "description",
+        author: "author",
+        // categorysId: "categorysId",
+        isbn: "isbnNo",
+        // language: "language",
+        productPrice: 200,
+        productImage: null,
+        category: {
+          type: "BOOK",
+        },
+      });
 
-      let st = await cartService.checkCart(cart);
-      // console.log(st.data);
-      setCartStatus(st.data);
+      // cart.book = bk.data;
+      // cart.user = user;
+
+      // let st = await cartService.checkCart(cart);
+      // // console.log(st.data);
+      // setCartStatus(st.data);
     } catch (error) {
       console.log(error);
     }
@@ -172,9 +187,17 @@ const ViewBook = () => {
   );
 */
 
+  /*
   return (
     <>
       <BookCard product={product} />
+    </>
+  );
+*/
+
+  return (
+    <>
+      <ProductDetails product={product} />
     </>
   );
 };
