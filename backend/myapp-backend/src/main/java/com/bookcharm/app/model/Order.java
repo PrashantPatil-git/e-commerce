@@ -17,6 +17,9 @@ public class Order {
     @JoinColumn(name = "userId")
     private User user;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
+    
     @ManyToOne
     @JoinColumn(name = "productId")
     private Product product;
@@ -34,24 +37,31 @@ public class Order {
     private int quantity;
 
     // Constructors
-    public Order() {
-    }
-
-    public Order(User user, Product product, String orderStatus, double totalAmount, LocalDate orderDate, int quantity) {
-        this.user = user;
-        this.product = product;
-        this.orderStatus = orderStatus;
-        this.totalAmount = totalAmount;
-        this.orderDate = orderDate;
-        this.quantity = quantity;
-    }
+   
 
     // Getters and Setters
     public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public Order() {
+		super();
+	}
+
+	public Order(Long orderId, User user, Payment payment, Product product, String orderStatus, double totalAmount,
+			LocalDate orderDate, int quantity) {
+		super();
+		this.orderId = orderId;
+		this.user = user;
+		this.payment = payment;
+		this.product = product;
+		this.orderStatus = orderStatus;
+		this.totalAmount = totalAmount;
+		this.orderDate = orderDate;
+		this.quantity = quantity;
+	}
+
+	public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
@@ -103,16 +113,14 @@ public class Order {
         this.quantity = quantity;
     }
 
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", user=" + user + ", payment=" + payment + ", product=" + product
+				+ ", orderStatus=" + orderStatus + ", totalAmount=" + totalAmount + ", orderDate=" + orderDate
+				+ ", quantity=" + quantity + "]";
+	}
+    
+
     // Other methods, if needed
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", orderDate=" + orderDate +
-                ", quantity=" + quantity +
-                '}';
-    }
 }
