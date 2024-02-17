@@ -41,8 +41,9 @@ const Cart = () => {
 
   const init = async () => {
     let cart = await cartService.getCart();
+    console.log(cart);
     setCartList(cart.data);
-    setTotalPrice(cart.data[cart.data.length - 1].totalPrice);
+    // setTotalPrice(cart.data[cart.data.length - 1].totalPrice);
   };
 
   const plusCart = (id, qu) => {
@@ -133,7 +134,7 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {cartList.map((item, ind) => (
+              {/* {cartList.map((item, ind) => (
                 <tr key={item.id}>
                   <th scope="row">
                     <img
@@ -164,7 +165,7 @@ const Cart = () => {
                     </a>
                   </td>
                 </tr>
-              ))}
+              ))} */}
 
               {/* <tr>
                 <td colSpan={4}>Total Price</td>

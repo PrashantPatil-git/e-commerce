@@ -27,18 +27,22 @@ public class ShoppingCart {
     @JsonIgnore
     private User user;
 
-    @JsonIgnore
+    // Other shopping cart attributes and methods
+
+    // Getters and setters
+    
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<ShoppingCartProduct> cartProducts = new HashSet<>();
 
-    // Other shopping cart attributes and methods
-
-    // Getters and setters
+   
 
     public Set<ShoppingCartProduct> getCartProducts(){
+    	System.out.println("In Shopping Cart Model");
+    	cartProducts.forEach(System.out::println);
         return cartProducts;
     }
+    
     // constructors
 
     // methods

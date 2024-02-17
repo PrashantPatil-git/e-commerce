@@ -36,7 +36,7 @@ const Navbar = () => {
   const init = async () => {
     let cart = await cartService.getCart();
 
-    setCartNo(cart.data.length);
+    // setCartNo(cart.data.length);
   };
 
   return (

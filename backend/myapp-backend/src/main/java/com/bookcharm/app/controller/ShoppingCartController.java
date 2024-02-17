@@ -4,11 +4,14 @@ import com.bookcharm.app.dto.CartDto;
 import com.bookcharm.app.exception.ClientErrorException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
 import com.bookcharm.app.model.ShoppingCart;
+import com.bookcharm.app.model.ShoppingCartProduct;
 import com.bookcharm.app.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,14 +23,14 @@ public class ShoppingCartController {
     private ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ResponseEntity<ShoppingCart> getShoppingCartByUserId(@RequestHeader String Authorization) {
+    public ResponseEntity<Set<ShoppingCartProduct> > getShoppingCartByUserId(@RequestHeader String Authorization) {
 
 
 
         String jwtToken = Authorization;
         System.out.println("jwtToken using request header : " + Authorization);
 
-        ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(jwtToken);
+        Set<ShoppingCartProduct> shoppingCart = shoppingCartService.getShoppingCart(jwtToken);
 
         System.out.println(shoppingCart);
 
