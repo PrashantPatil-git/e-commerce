@@ -14,11 +14,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./Navbar.css";
 import { clearCurrentUser } from "../../store/action/user.action";
+import { clearCurrentAdmin } from "../../store/action/admin.action";
+import { clearCurrentSeller } from "../../store/action/seller.action";
 import cartService from "../../service/cart.service";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
+
+
   const loginUser = useSelector((u) => u.user);
+  const loginSeller = useSelector((state) => state.seller);
+  const loginAdmin = useSelector((state) => state.admin);
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,8 +37,15 @@ const Navbar = () => {
   }, []);
 
   const logout = () => {
-    dispatch(clearCurrentUser());
-    navigate("/login");
+    if(loginUser){
+      dispatch(clearCurrentUser());
+    }else if(loginAdmin){
+      dispatch(clearCurrentAdmin());
+    }else if(loginSeller){
+      dispatch(clearCurrentSeller);
+    }
+    
+    navigate("/");
   };
 
   const init = async () => {
@@ -79,31 +94,37 @@ const Navbar = () => {
 
             {
               // if user is not logged in then rendor this code
-              !loginUser && (
-                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li className="nav-item">
-                    <Link
-                      to="/login"
-                      className="nav-link active"
-                      aria-current="page"
-                    >
-                      {/* <i className="fa-solid fa-right-to-bracket"></i> Login */}
-                      Login
-                    </Link>
-                  </li>
+              (loginSeller || loginAdmin) ? <li className="nav-item btn btn-outline-warning" onClick={()=>logout()}>
+                
+                  logout
 
-                  <li className="nav-item">
-                    <Link to="/signup" className="nav-link">
-                      Signup
-                    </Link>
-                  </li>
-                  <li className="nav-item btn btn-outline-warning">
-                    <Link to="/sellerRegister" className="nav-link active">
-                      Become a seller
-                    </Link>
-                  </li>
-                </ul>
-              )
+              </li>
+                : !loginUser && (
+
+                  <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li className="nav-item">
+                      <Link
+                        to="/login"
+                        className="nav-link active"
+                        aria-current="page"
+                      >
+                        {/* <i className="fa-solid fa-right-to-bracket"></i> Login */}
+                        Login
+                      </Link>
+                    </li>
+
+                    <li className="nav-item">
+                      <Link to="/signup" className="nav-link">
+                        Signup
+                      </Link>
+                    </li>
+                    <li className="nav-item btn btn-outline-warning">
+                      <Link to="/sellerRegister" className="nav-link active">
+                        Become a seller
+                      </Link>
+                    </li>
+                  </ul>
+                )
             }
 
             {
