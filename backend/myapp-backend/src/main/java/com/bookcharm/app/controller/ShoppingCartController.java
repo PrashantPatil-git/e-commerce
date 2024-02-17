@@ -22,8 +22,6 @@ public class ShoppingCartController {
     @GetMapping
     public ResponseEntity<ShoppingCart> getShoppingCartByUserId(@RequestHeader String Authorization) {
 
-
-
         String jwtToken = Authorization;
         System.out.println("jwtToken using request header : " + Authorization);
 

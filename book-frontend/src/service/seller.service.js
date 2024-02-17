@@ -87,6 +87,13 @@ class sellerService {
     );
   }
 
+  // verify the admin using token and send seller id as query string
+  removeSeller(sellerId) {
+    return axios.delete(API_URL + `/sellers/seller/${sellerId}`, {
+      headers: AuthHeader(),
+    });
+  }
+
   addProduct(product) {
     console.log(product);
     return axios.post(
