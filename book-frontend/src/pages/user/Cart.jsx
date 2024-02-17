@@ -119,7 +119,7 @@ const Cart = () => {
         .catch((error) => {
           console.log(error);
         });
-      navigate("/orderSucc");
+      navigate("/orderSuccessful");
     } else {
       navigate("/cardPayment/" + totalPrice);
     }
