@@ -19,7 +19,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.webjars.NotFoundException;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -43,7 +46,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart getShoppingCart(String jwtToken) {
+    public Set<ShoppingCartProduct> getShoppingCart(String jwtToken) {
 
         // first identify the user using jwtToken, then return the shopping cart of user
         Long userId = webClient.post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse ->
@@ -51,8 +54,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Long shoppingCartId = userId;
 
         Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.findById(shoppingCartId);
-
-        return optionalShoppingCart.orElse(null);
+        if(optionalShoppingCart.isPresent()) {
+        	
+        	ShoppingCart shoppingCart = optionalShoppingCart.get();
+        
+        	return shoppingCart.getCartProducts();
+        }
+        return null;
 
     }
 
