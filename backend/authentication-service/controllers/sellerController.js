@@ -11,7 +11,7 @@ exports.registerSeller = async (req, res) => {
         message: result.message,
       });
     } else {
-      return res.status(400).json({ message: result.message });
+      return res.status(409).json({ message: result.message });
     }
   } catch (error) {
     console.log("Error Occured : ", error);

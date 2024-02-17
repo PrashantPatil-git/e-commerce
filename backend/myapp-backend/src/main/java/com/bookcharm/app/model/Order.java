@@ -1,6 +1,9 @@
 package com.bookcharm.app.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -13,6 +16,7 @@ public class Order {
     @JoinColumn(name = "addressId")
     private Long orderId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;

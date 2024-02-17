@@ -197,6 +197,8 @@ public class SellerServiceImpl implements SellerService {
         // through an error when user password not matched with passed password
         if(clientResponse.statusCode().equals(HttpStatus.UNAUTHORIZED)){
             return Mono.error(new AuthenticationFailedException("password not match"));
+        }else if(clientResponse.statusCode().equals(HttpStatus.CONFLICT)) {
+        	return Mono.error(new EmailAlreadyExistsException("Provided email already exists"));
         }
 
         return Mono.error(new ClientErrorException("Client Error: " + clientResponse.statusCode()));

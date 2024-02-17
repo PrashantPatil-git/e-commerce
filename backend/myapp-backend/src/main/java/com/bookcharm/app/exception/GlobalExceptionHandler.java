@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleEmailAlreadyExistsException(Exception ex) {
         ex.printStackTrace();
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("duplicate email id");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 

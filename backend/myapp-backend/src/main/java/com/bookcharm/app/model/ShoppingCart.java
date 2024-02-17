@@ -27,6 +27,7 @@ public class ShoppingCart {
     @JsonIgnore
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<ShoppingCartProduct> cartProducts = new HashSet<>();

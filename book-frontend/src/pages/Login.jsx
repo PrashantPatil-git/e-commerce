@@ -59,7 +59,9 @@ const Login = () => {
       .login(login)
       .then((res) => {
         // save jwt token in local storage
-        console.log(res);
+        console.log(res.data);
+        console.log(res.data.token);
+
         localStorage.setItem("token", res.data.token);
 
         dispatch(setCurrentUser({ user: res.data.user }));

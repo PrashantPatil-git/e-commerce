@@ -43,6 +43,7 @@ public class SellerController {
 
         try {
             Seller seller = sellerService.createSeller(sellerRegistrationDto);
+            
             return ResponseEntity.ok("Seller Registration Request is under processing");
         }
 
