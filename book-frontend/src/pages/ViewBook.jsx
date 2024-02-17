@@ -1,25 +1,23 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Book from "../model/Book";
 import bookService from "../service/book.service";
 import { useDispatch, useSelector } from "react-redux";
 import cartService from "../service/cart.service";
 import { ToastContainer, toast } from "react-toastify";
-import { BASE_API_URL } from "../common/constant";
+
+import ProductDetails from "./ProductDetails";
 
 const ViewBook = () => {
-  const [cart, setCart] = useState({
-    book: "",
-    user: "",
-    quantity: "",
+  const [product, setProduct] = useState({
+    productName: "",
+    productPrice: "",
+    productImage: null,
+    productDescription: "",
+    category: "",
+    author: "",
+    isbn: "",
   });
-
-  const [book, setBook] = useState(
-    new Book("", "", "", "", "", "", "", "", "", "", "")
-  );
-
-  const [cartStatus, setCartStatus] = useState(false);
 
   const { id } = useParams();
   const user = useSelector((st) => st.user);
@@ -31,16 +29,9 @@ const ViewBook = () => {
 
   const init = async () => {
     try {
-      let bk = await bookService.getBookById(id);
-      console.log(bk);
-      setBook(bk);
-
-      cart.book = bk.data;
-      cart.user = user;
-
-      let st = await cartService.checkCart(cart);
-      // console.log(st.data);
-      setCartStatus(st.data);
+      let res = await bookService.getBookById(id);
+      console.log(res.data);
+      setProduct(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -57,27 +48,24 @@ const ViewBook = () => {
       progress: undefined,
     });
 
-  const addToCart = (b) => {
+  const addToCart = (productId, quantity) => {
     if (!user) {
       navigate("/login");
     } else {
-      cart.book = b;
-      cart.user = user;
-      cart.quantity = 1;
-
       cartService
-        .addCart(cart)
+        .addCart(productId, quantity)
         .then((res) => {
+          console.log(res);
           notify();
           init();
         })
         .catch((error) => {
-          
           console.log(error);
         });
     }
   };
 
+  /*
   return (
     <div className="container p-3">
       <div className="row">
@@ -156,6 +144,32 @@ const ViewBook = () => {
         pauseOnHover
       />
     </div>
+  );
+*/
+
+  /*
+  return (
+    <>
+      <BookCard product={product} />
+    </>
+  );
+*/
+
+  return (
+    <>
+      <ProductDetails product={product} addToCart={addToCart} />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 };
 

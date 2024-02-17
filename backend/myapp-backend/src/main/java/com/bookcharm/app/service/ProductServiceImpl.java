@@ -1,10 +1,13 @@
 package com.bookcharm.app.service;
 
+import com.bookcharm.app.dto.AddProductDto;
+import com.bookcharm.app.exception.ProductNotFoundException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
 import com.bookcharm.app.exception.UserNotFoundException;
 import com.bookcharm.app.model.Category;
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.model.Seller;
+import com.bookcharm.app.repository.CategoryRepository;
 import com.bookcharm.app.repository.ProductRepository;
 import com.bookcharm.app.repository.SellerRepository;
 import com.bookcharm.app.utils.JwtUtil;
@@ -15,11 +18,23 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bookcharm.app.model.Product;
+import com.bookcharm.app.repository.ProductRepository;
+
 @Service
 public class ProductServiceImpl implements ProductService {
+	
+	
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+    
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -39,12 +54,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product, String jwtToken) {
+    public Product addProduct(AddProductDto addProductDto, String jwtToken) {
 
         // validate the seller and add product in seller products
-        // Add logic for product creation, validation, etc.
-
-
 
         Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
 
@@ -57,19 +69,27 @@ public class ProductServiceImpl implements ProductService {
 
                 Product newProduct = new Product();
 
-                newProduct.setProductName(product.getProductName());
-                newProduct.setProductPrice(product.getProductPrice());
-                newProduct.setProductDescription(product.getProductDescription());
-                newProduct.setAuthor(product.getAuthor());
-                newProduct.setCategory(new Category("BOOK"));
-                newProduct.setIsbn(product.getIsbn());
+                // set Book category as by default
+                // Book category has id 1 by default
+                Optional<Category> optionalCategory = categoryRepository.findById(1l);
+
+                Category category = optionalCategory.get();
+
+
+                newProduct.setProductName(addProductDto.getProductName());
+                newProduct.setProductPrice(addProductDto.getProductPrice());
+                newProduct.setProductDescription(addProductDto.getProductDescription());
+                newProduct.setAuthor(addProductDto.getAuthor());
+                newProduct.setCategory(category);
+                newProduct.setIsbn(addProductDto.getIsbn());
                 newProduct.setSeller(seller);
-                newProduct.setStock(product.getStock());
+                newProduct.setStock(addProductDto.getStock());
                 newProduct.setViewCount(0);
-                newProduct.setProductImage("this is product image");
+//                newProduct.setProductImage(addProductDto.getProductImage());
 
                 seller.addProduct(newProduct);
 
+                productRepository.save(newProduct);
                 sellerRepository.save(seller);
 
                 return newProduct;
@@ -87,7 +107,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long productId, Product updatedProduct) {
+    public Product updateProduct(Long productId, String sellerJwtToken, Product updatedProduct) {
+        
         Optional<Product> optionalProduct = productRepository.findById(productId);
         if (optionalProduct.isPresent()) {
             Product existingProduct = optionalProduct.get();
@@ -115,12 +136,52 @@ public class ProductServiceImpl implements ProductService {
         // validate the seller based on jwtToken
         // verify whether seller has product with ProductId
         // else throw UnAuthorization Exception
+    	
+    	
 
-        if (productRepository.existsById(productId)) {
-            productRepository.deleteById(productId);
-            return true;
+        Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
+
+        // if seller exists
+        if(optionalSellerId.isPresent()){
+
+            Long sellerId = optionalSellerId.get();
+
+
+            // access the seller with that id
+            Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
+
+            if(optionalSeller.isPresent()){
+
+                Seller seller = optionalSeller.get();
+
+                // find the product with productId
+                Optional<Product> optionalProduct = productRepository.findById(productId);
+
+                if(optionalProduct.isPresent()){
+
+                    // validate whether product is related to seller
+                    // otherwise throw UnAuthorizedException
+                    Product product = optionalProduct.get();
+
+                    // remove product from seller
+                    if(!seller.getProducts().remove(product)){
+                        throw new UnauthorizedAccessException("Un authorized access");
+                    }else{
+                        sellerRepository.save(seller);
+                        return true;
+                    }
+                }else{
+                    // if product is not found return product not found exception
+                    throw new ProductNotFoundException("product with product id not found");
+                }
+            }else{
+                throw new UserNotFoundException("User not found exception");
+            }
+        }else{
+            throw new UserNotFoundException("User not found exception");
         }
-        return false;
+
+
     }
 
     // Add other ProductService methods if needed

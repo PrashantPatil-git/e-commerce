@@ -4,30 +4,31 @@ import com.bookcharm.app.dto.CartDto;
 import com.bookcharm.app.exception.ClientErrorException;
 import com.bookcharm.app.exception.UnauthorizedAccessException;
 import com.bookcharm.app.model.ShoppingCart;
+import com.bookcharm.app.model.ShoppingCartProduct;
 import com.bookcharm.app.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/shopping-carts")
+@RequestMapping("/shopping-carts")
 public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    @GetMapping("")
-    public ResponseEntity<ShoppingCart> getShoppingCartByUserId(@RequestHeader String Authorization) {
-
-
+    @GetMapping
+    public ResponseEntity<Set<ShoppingCartProduct> > getShoppingCartByUserId(@RequestHeader String Authorization) {
 
         String jwtToken = Authorization;
         System.out.println("jwtToken using request header : " + Authorization);
 
-        ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(jwtToken);
+        Set<ShoppingCartProduct> shoppingCart = shoppingCartService.getShoppingCart(jwtToken);
 
         System.out.println(shoppingCart);
 
@@ -36,13 +37,14 @@ public class ShoppingCartController {
 
     }
 
-    @PutMapping(name = "/shopping-cart")
-    public ResponseEntity<Void> updateShoppingCart(HttpServletRequest request, @RequestBody CartDto cartDto){
+    @PutMapping
+    public ResponseEntity<Void> updateShoppingCart(@RequestHeader String Authorization, @RequestBody CartDto cartDto){
 
 
-        String jwtToken = request.getHeader("Authorization");
-        System.out.println("This is token : " + jwtToken);
-
+        String jwtToken = Authorization;
+      
+        System.out.print("This is quantity" + cartDto.getQuantity());
+        System.out.print("This is productId" + cartDto.getProductId());
 
 
         try{

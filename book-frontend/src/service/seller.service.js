@@ -43,7 +43,11 @@ class sellerService {
       { id: 3, title: "Book 3", author: "Author 3", price: 20, quantity: 3 },
     ];
   }
-  deleteBook(id) {}
+  deleteBook(productId) {
+    return axios.delete(API_URL + `/products/${productId}`, {
+      headers: AuthHeader(),
+    });
+  }
 
   //admin will verify and to update verified seller this function is used
   updateSeller(seller) {}
@@ -77,6 +81,34 @@ class sellerService {
     return axios.put(
       API_URL + `/sellers/seller/${sellerId}`,
       {},
+      {
+        headers: AuthHeader(),
+      }
+    );
+  }
+
+  // verify the admin using token and send seller id as query string
+  removeSeller(sellerId) {
+    return axios.delete(API_URL + `/sellers/seller/${sellerId}`, {
+      headers: AuthHeader(),
+    });
+  }
+
+  addProduct(product) {
+    console.log(product);
+    return axios.post(
+      API_URL + "/products",
+      {
+        productName: product.productName,
+        productDescription: product.productDescription,
+        productPrice: product.productPrice,
+        stock: product.stock,
+        productImage: product.productImage,
+        category: product.productCategory || "BOOK",
+        author: product.author,
+        isbn: product.isbn,
+      },
+
       {
         headers: AuthHeader(),
       }

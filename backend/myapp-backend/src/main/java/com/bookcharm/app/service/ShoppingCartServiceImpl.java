@@ -19,14 +19,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.webjars.NotFoundException;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
-    
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -37,22 +40,27 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     final private String authenticationServiceBaseUrl;
 
     // inject the authentication service url using constructor based dependency injection
-    public ShoppingCartServiceImpl( @Value("${url.authentication-service-base-url}") String authenticationServiceBaseUrl,  WebClient.Builder webClientBuilder) {
+    public ShoppingCartServiceImpl(@Value("${url.authentication-service-base-url}") String authenticationServiceBaseUrl, WebClient.Builder webClientBuilder) {
         this.authenticationServiceBaseUrl = authenticationServiceBaseUrl;
         this.webClient = webClientBuilder.baseUrl(authenticationServiceBaseUrl).build();
     }
 
     @Override
-    public ShoppingCart getShoppingCart(String jwtToken) {
+    public Set<ShoppingCartProduct> getShoppingCart(String jwtToken) {
 
         // first identify the user using jwtToken, then return the shopping cart of user
-        Long userId = webClient.post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError , clientResponse->
-        handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
+        Long userId = webClient.post().uri("/user/validate-token").header(HttpHeaders.AUTHORIZATION, jwtToken).retrieve().onStatus(HttpStatus::is4xxClientError, clientResponse ->
+                handleClientError(clientResponse)).bodyToMono(AuthenticationResponse.class).map(AuthenticationResponse::getUserId).block();
         Long shoppingCartId = userId;
 
         Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.findById(shoppingCartId);
-
-        return optionalShoppingCart.orElse(null);
+        if(optionalShoppingCart.isPresent()) {
+        	
+        	ShoppingCart shoppingCart = optionalShoppingCart.get();
+        
+        	return shoppingCart.getCartProducts();
+        }
+        return null;
 
     }
 
@@ -78,47 +86,62 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Long productId = cartDto.getProductId();
         int quantity = cartDto.getQuantity();
 
+        System.out.println("productId : " + productId);
+        System.out.println("quantity " + quantity);
+        System.out.println("shoppingCartId : " + shoppingCartId);
         // Retrieve the ShoppingCart entity using shoppingCartId
         Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.findById(shoppingCartId);
 
         if (optionalShoppingCart.isPresent()) {
             ShoppingCart shoppingCart = optionalShoppingCart.get();
 
-            // Check if the ShoppingCart contains a ShoppingCartProduct with productId
-            Optional<ShoppingCartProduct> optionalShoppingCartProduct = shoppingCart.getCartProducts().stream()
-                    .filter(cartProduct ->
-                            cartProduct.getProduct().getProductId().equals(productId)).findFirst();
+            // find product using productId
+            Optional<Product> optionalProduct = productRepository.findById(productId);
 
-            if (optionalShoppingCartProduct.isPresent()) {
-                // If ShoppingCart contains ShoppingCartProduct with productId and correct shoppingCartId, update its quantity with new quantity
-                ShoppingCartProduct optionalShoppingCartProductToUpdate = optionalShoppingCartProduct.get();
-                optionalShoppingCartProductToUpdate.setQuantity(quantity);
-            } else {
-                // If ShoppingCart does not contain ShoppingCartProduct with productId and correct shoppingCartId, create a new one
-                Optional<Product> optionalProduct = productRepository.findById(productId);
-                if (optionalProduct.isPresent()) {
-                    Product product = optionalProduct.get();
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                // Check if the ShoppingCart contains a ShoppingCartProduct with productId
+                Optional<ShoppingCartProduct> optionalShoppingCartProduct = shoppingCart.getCartProducts().stream()
+                        .filter(cartProduct ->
+                                cartProduct.getProduct().getProductId().equals(product.getProductId())).findFirst();
+
+
+                if (optionalShoppingCartProduct.isPresent()) {
+                    // If ShoppingCart contains ShoppingCartProduct with productId and correct shoppingCartId, update its quantity with new quantity
+                    ShoppingCartProduct optionalShoppingCartProductToUpdate = optionalShoppingCartProduct.get();
+                    optionalShoppingCartProductToUpdate.setQuantity(quantity);
+                } else {
+                    // If ShoppingCart does not contain ShoppingCartProduct with productId and correct shoppingCartId, create a new one
+
                     ShoppingCartProduct newProduct = new ShoppingCartProduct();
                     newProduct.setProduct(product);
                     newProduct.setQuantity(quantity);
                     newProduct.setShoppingCart(shoppingCart);
                     shoppingCart.addCartProduct(newProduct);
-                } else {
-                    // Handle case where Product with productId does not exist
-                    throw new NotFoundException("Product Not Found");
-                }
-            }
-            shoppingCartRepository.save(shoppingCart);
-            return shoppingCart;
 
-        } else {
+
+                   
+                }
+                
+                shoppingCartRepository.save(shoppingCart);
+            }
+            else {
+                // Handle case where Product with productId does not exist
+                throw new NotFoundException("Product Not Found");
+            }
+
+            return shoppingCart;
+        }
+        else {
 
             // case where cart with shoppingcartid does not exist
             throw new NotFoundException("Cart Not Found");
         }
+}
 
 
-    }
+
+
 
 
 

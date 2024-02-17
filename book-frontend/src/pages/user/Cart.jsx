@@ -39,18 +39,37 @@ const Cart = () => {
     init();
   }, []);
 
+  useEffect(()=>{
+
+    //code for calcuating totalPrice
+    var calculateTotalPrice=0;
+    
+    cartList.forEach(item=>{
+      console.log(totalPrice);
+      console.log(item.product);
+      console.log(item.product.productPrice);
+      console.log(item.quantity); 
+      calculateTotalPrice += item.product.productPrice*item.quantity
+
+    });
+    setTotalPrice(calculateTotalPrice);
+    console.log(totalPrice);
+
+  },[cartList]);
+
   const init = async () => {
     let cart = await cartService.getCart();
+    console.log(cart);
     setCartList(cart.data);
-    setTotalPrice(cart.data[cart.data.length - 1].totalPrice);
+    
   };
 
-  const plusCart = (id, qu) => {
-    qu = qu + 1;
+  const plusCart = (id,qu) => {
+    qu +=1;
 
     if (qu > 1) {
       cartService
-        .updateCart(id, qu)
+        .updateCart(id,qu)
         .then((res) => {
           init();
         })
@@ -60,11 +79,11 @@ const Cart = () => {
     }
   };
 
-  const minusCart = (id, qu) => {
-    qu = qu - 1;
+  const minusCart = (id,qu) => {
+   qu = qu -1;
     if (qu < 1) {
       cartService
-        .deleteCart(id)
+        .deleteCart(id,qu)
         .then((res) => {
           init();
           notify();
@@ -74,7 +93,7 @@ const Cart = () => {
         });
     } else {
       cartService
-        .updateCart(id, qu)
+        .updateCart(id,qu)
         .then((res) => {
           init();
         })
@@ -100,7 +119,7 @@ const Cart = () => {
         .catch((error) => {
           console.log(error);
         });
-      navigate("/orderSucc");
+      navigate("/orderSuccessful");
     } else {
       navigate("/cardPayment/" + totalPrice);
     }
@@ -133,7 +152,12 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {cartList.map((item, ind) => (
+               {cartList.map((item, ind) => (
+
+               
+                
+
+
                 <tr key={item.id}>
                   <th scope="row">
                     <img
@@ -142,25 +166,25 @@ const Cart = () => {
                       height="70px"
                     />
                   </th>
-                  <td>{item.book.bookName}</td>
-                  <td>{item.book.price}</td>
+                  <td>{item.product.productName}</td>
+                  <td>{item.product.productPrice}</td>
                   <td>{item.quantity}</td>
-                  <td>{item.quantity * item.book.price}</td>
+                  <td>{item.quantity * item.product.productPrice}</td>
                   <td className="text-center">
                     <a
-                      onClick={() => plusCart(item.id, item.quantity)}
+                      onClick={() => plusCart(item.product.productId,item.quantity)}
                       className="text-dark"
                     >
-                      <i class="fa-solid fa-plus">plus</i>
+                      <i class="fa-solid fa-plus"></i>
                     </a>
                     <button className="btn btn-sm btn-dark ms-2 me-2">
                       {item.quantity}{" "}
                     </button>
                     <a
-                      onClick={() => minusCart(item.id, item.quantity)}
+                      onClick={() => minusCart(item.product.productId,item.quantity)}
                       className="text-dark ms-1"
                     >
-                      <i class="fa-solid fa-minus">minus</i>
+                      <i class="fa-solid fa-minus"></i>
                     </a>
                   </td>
                 </tr>
@@ -207,8 +231,7 @@ const Cart = () => {
                   Amount: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
                   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                  <i className="fas fa-rupee-sign"></i> {50 //totalPrice
-                  }
+                  <i className="fas fa-rupee-sign"></i> {totalPrice}
                   <br /> Shipping Charge:&nbsp; &nbsp; &nbsp; &nbsp;
                   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
                   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;

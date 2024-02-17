@@ -33,7 +33,7 @@ public class Product {
     private String productDescription;
 
     @Column(name = "productImage")
-    private String productImage;
+    private byte[] productImage;
 
     @Column(name = "stock")
     private int stock;
@@ -61,7 +61,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productName, BigDecimal productPrice, String productDescription, String productImage, int stock,
+    public Product(String productName, BigDecimal productPrice, String productDescription, byte[] productImage, int stock,
                    Category category, Seller seller, int viewCount, String author, String isbn) {
         this.productName = productName;
         this.productPrice = productPrice;
@@ -109,11 +109,11 @@ public class Product {
 		this.productDescription = productDescription;
 	}
 
-	public String getProductImage() {
+	public byte[] getProductImage() {
 		return productImage;
 	}
 
-	public void setProductImage(String productImage) {
+	public void setProductImage(byte[] productImage) {
 		this.productImage = productImage;
 	}
 
@@ -179,20 +179,5 @@ public class Product {
 		return Objects.hash(productId);
 	}
 
-	@Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productPrice=" + productPrice +
-                ", productDescription='" + productDescription + '\'' +
-                ", productImage='" + productImage + '\'' +
-                ", stock=" + stock +
-                ", category=" + category +
-                ", seller=" + seller +
-                ", viewCount=" + viewCount +
-                ", author='" + author + '\'' +
-                ", isbn='" + isbn + '\'' +
-                '}';
-    }
+	
 }

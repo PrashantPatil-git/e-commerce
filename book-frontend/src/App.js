@@ -13,6 +13,7 @@ import SellerLogin from "./pages/seller/SellerLogin";
 import Orders from "./pages/user/Orders";
 import { SellerRegister } from "./pages/seller/SellerRegister";
 import SellerHome from "./pages/seller/SellerHome";
+import OrderSuccessful from "./pages/user/OrderSuccessful";
 /*import { Home } from './pages/Home';
 
 
@@ -54,7 +55,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
-        <Route path="/viewBook/:id" element={<ViewBook />}></Route>
+        <Route path="/book/:bookname/:id" element={<ViewBook />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
@@ -63,6 +64,9 @@ function App() {
         <Route path="/sellerRegister" element={<SellerRegister />}></Route>
         <Route path="/sellerHome" element={<SellerHome />}></Route>
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
+        <Route path="/orderSuccessful" element={<OrderSuccessful />}></Route>
+
+
         <Route
           path="/adminDashboard"
           // element={
