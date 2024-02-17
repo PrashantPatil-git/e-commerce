@@ -40,12 +40,13 @@ public class ShoppingCartController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateShoppingCart(HttpServletRequest request, @RequestBody CartDto cartDto){
+    public ResponseEntity<Void> updateShoppingCart(@RequestHeader String Authorization, @RequestBody CartDto cartDto){
 
 
-        String jwtToken = request.getHeader("Authorization");
-        System.out.println("This is token : " + jwtToken);
-
+        String jwtToken = Authorization;
+      
+        System.out.print("This is quantity" + cartDto.getQuantity());
+        System.out.print("This is productId" + cartDto.getProductId());
 
 
         try{

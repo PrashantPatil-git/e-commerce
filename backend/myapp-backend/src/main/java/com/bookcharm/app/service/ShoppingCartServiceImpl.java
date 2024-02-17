@@ -120,8 +120,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     shoppingCart.addCartProduct(newProduct);
 
 
-                    shoppingCartRepository.save(shoppingCart);
+                   
                 }
+                
+                shoppingCartRepository.save(shoppingCart);
             }
             else {
                 // Handle case where Product with productId does not exist
