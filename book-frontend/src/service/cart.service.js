@@ -27,10 +27,13 @@ class CartService {
     return axios.get(API_URL + "/shopping-carts", { headers: AuthHeader()})
   }
 
-  updateCart(id, qu) {
-    return axios.post(API_URL + "/updateQuan/" + id + "/" + qu, {
+  updateCart(id,qu) {
+    console.log(id +  ", " +qu);
+    return axios.put(API_URL + "/shopping-carts/" ,  {productId:id,quantity:qu}, {
       headers: AuthHeader(),
-    });
+    })
+   
+
   }
 
   deleteCart(id) {
