@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+
+        return FileUtils.buildProductImages(productRepository.findAll());
     }
 
     @Override
@@ -200,5 +203,26 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    // Add other ProductService methods if needed
+    @Override
+    public List<Product> getAllProductsOfSeller(String jwtToken){
+
+        Optional<Long> optionalSellerId = jwtUtil.verifySeller(jwtToken);
+
+        if(optionalSellerId.isPresent()){
+            Long sellerId = optionalSellerId.get();
+            Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
+            if(optionalSeller.isPresent()){
+                Seller seller = optionalSeller.get();
+//                return all the products by seller
+//                // retrieve product images from folder
+                List<Product> products = seller.getProducts();
+
+                return FileUtils.buildProductImages(products);
+            }else{
+                throw new UserNotFoundException("seller with id not found");
+            }
+        }else{
+            throw new UnauthorizedAccessException("unauthorized access exception");
+        }
+    }
 }

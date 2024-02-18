@@ -10,6 +10,8 @@ import { toast, ToastContainer } from "react-toastify";
 
 import { RotatingLines } from "react-loader-spinner";
 
+import genericbook from "../../generic-book.jpg";
+
 const SellerHome = () => {
   const productValues = {
     productName: "book",
@@ -48,7 +50,20 @@ const SellerHome = () => {
   const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
-    setBooks(sellerService.getAllBooks());
+    sellerService
+      .getAllBooks()
+      .then((res) => {
+        console.log(res.data);
+
+        // const products = res.data.map((product) => {
+        //   product.productImage = `data:image/jpeg;base64,${product.productImage}`;
+        // });
+
+        setBooks(res.data);
+      })
+      .then((err) => {
+        console.log(err);
+      });
   }, []);
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -153,9 +168,9 @@ const SellerHome = () => {
             <tbody className="text-center">
               {books.map((book) => (
                 <tr key={book.id}>
-                  <td>{book.title}</td>
+                  <td>{book.productName}</td>
                   <td>{book.author}</td>
-                  <td>{book.price}</td>
+                  <td>{book.productPrice}</td>
                   <td>
                     <button
                       className="btn btn-sm btn-dark me-1"
@@ -183,10 +198,19 @@ const SellerHome = () => {
                       Delete
                     </button>
                   </td>
+                  <img
+                    src={
+                      book.productImage
+                        ? `data:image/jpeg;base64,${book.productImage}`
+                        : genericbook
+                    }
+                    height="100px"
+                  />
                 </tr>
               ))}
             </tbody>
           </table>
+
           <button
             className="btn btn-primary"
             onClick={() => setShowAddForm(true)}

@@ -86,4 +86,12 @@ public class ProductController {
 
     }
 
+    @GetMapping("/seller")
+    public ResponseEntity<?> getAllProductsOfSeller(@RequestHeader String Authorization){
+
+            List<Product> sellerProducts = productService.getAllProductsOfSeller(Authorization);
+            return new ResponseEntity<>(sellerProducts, HttpStatus.OK);
+
+    }
+
 }

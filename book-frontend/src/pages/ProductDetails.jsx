@@ -4,9 +4,6 @@ import "../css/productDetails.css";
 import genericbook from "../generic-book.jpg";
 
 const ProductDetails = ({ product, addToCart }) => {
-
-
-    
   const handleAddToCart = (productId, quantity) => {
     alert(productId, quantity);
     addToCart(productId, quantity);

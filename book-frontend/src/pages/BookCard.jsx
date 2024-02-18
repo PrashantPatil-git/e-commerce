@@ -21,7 +21,11 @@ const Card = ({ product }) => {
       onClick={() => handleOnClick(product.productId, product.productName)}
     >
       <img
-        src={product.productImage ? product.productImage : genericbook}
+        src={
+          product.productImage !== null
+            ? `data:image/jpeg;base64, ${product.productImage}`
+            : genericbook
+        }
         alt={product.productName}
       />
       <div className="book-card-body">

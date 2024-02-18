@@ -13,4 +13,6 @@ public interface ProductService {
     boolean deleteProduct(Long productId, String Authorization);
     // Other ProductService methods
 	Product addProduct(AddProductDto addProductDto, String Authorization);
+
+    List<Product> getAllProductsOfSeller(String Authorization);
 }
