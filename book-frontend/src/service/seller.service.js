@@ -95,24 +95,13 @@ class sellerService {
   }
 
   addProduct(product) {
+    alert("from add product");
     console.log(product);
-    return axios.post(
-      API_URL + "/products",
-      {
-        productName: product.productName,
-        productDescription: product.productDescription,
-        productPrice: product.productPrice,
-        stock: product.stock,
-        productImage: product.productImage,
-        category: product.productCategory || "BOOK",
-        author: product.author,
-        isbn: product.isbn,
-      },
 
-      {
-        headers: AuthHeader(),
-      }
-    );
+    // set the content-type as "multipart/form-data" rather than application/json because product may be contain product image
+    return axios.post(API_URL + "/products", product, {
+      headers: { ...AuthHeader(), "Content-Type": "multipart/form-data" },
+    });
   }
 }
 

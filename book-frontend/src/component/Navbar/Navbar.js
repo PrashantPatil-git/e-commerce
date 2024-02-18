@@ -20,12 +20,9 @@ import cartService from "../../service/cart.service";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
-
-
   const loginUser = useSelector((u) => u.user);
   const loginSeller = useSelector((state) => state.seller);
   const loginAdmin = useSelector((state) => state.admin);
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,20 +34,19 @@ const Navbar = () => {
   }, []);
 
   const logout = () => {
-    if(loginUser){
+    if (loginUser) {
       dispatch(clearCurrentUser());
-    }else if(loginAdmin){
+    } else if (loginAdmin) {
       dispatch(clearCurrentAdmin());
-    }else if(loginSeller){
+    } else if (loginSeller) {
       dispatch(clearCurrentSeller());
     }
-    
+
     navigate("/");
   };
 
   const init = async () => {
-    let cart = await cartService.getCart();
-
+    // let cart = await cartService.getCart();
     // setCartNo(cart.data.length);
   };
 
@@ -94,13 +90,15 @@ const Navbar = () => {
 
             {
               // if user is not logged in then rendor this code
-              (loginSeller || loginAdmin) ? <li className="nav-item btn btn-outline-warning" onClick={()=>logout()}>
-                
+              loginSeller || loginAdmin ? (
+                <li
+                  className="nav-item btn btn-outline-warning"
+                  onClick={() => logout()}
+                >
                   logout
-
-              </li>
-                : !loginUser && (
-
+                </li>
+              ) : (
+                !loginUser && (
                   <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li className="nav-item">
                       <Link
@@ -125,6 +123,7 @@ const Navbar = () => {
                     </li>
                   </ul>
                 )
+              )
             }
 
             {

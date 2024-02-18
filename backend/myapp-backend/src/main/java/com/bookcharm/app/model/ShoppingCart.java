@@ -38,8 +38,6 @@ public class ShoppingCart {
    
 
     public Set<ShoppingCartProduct> getCartProducts(){
-    	System.out.println("In Shopping Cart Model");
-    	cartProducts.forEach(System.out::println);
         return cartProducts;
     }
     

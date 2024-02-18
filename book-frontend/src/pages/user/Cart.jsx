@@ -10,55 +10,49 @@ import userService from "../../service/user.service";
 import addressService from "../../service/address.service";
 
 const Cart = () => {
-  
-
   const loginUser = useSelector((u) => u.user);
 
-  
-  const [address,setAddress] = useState();
+  const [address, setAddress] = useState();
   const [cartList, setCartList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [pymtType, setPymtType] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     init();
   }, []);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     //code for calcuating totalPrice
-    var calculateTotalPrice=0;
-    
-    cartList.forEach(item=>{
+    var calculateTotalPrice = 0;
+
+    cartList.forEach((item) => {
       console.log(totalPrice);
       console.log(item.product);
       console.log(item.product.productPrice);
-      console.log(item.quantity); 
-      calculateTotalPrice += item.product.productPrice*item.quantity
-
+      console.log(item.quantity);
+      calculateTotalPrice += item.product.productPrice * item.quantity;
     });
     setTotalPrice(calculateTotalPrice);
     console.log(totalPrice);
-
-  },[cartList]);
+  }, [cartList]);
 
   const init = async () => {
     let cart = await cartService.getCart();
     console.log(cart);
     setCartList(cart.data);
 
-    let address = await addressService.getAddress();
-    console.log(address);
-    setAddress(address);
-    
+    // let address = await addressService.getAddress();
+    // console.log(address);
+    // setAddress(address);
   };
 
-  const plusCart = (id,qu) => {
-    qu +=1;
+  const plusCart = (id, qu) => {
+    qu += 1;
 
     if (qu > 1) {
       cartService
-        .updateCart(id,qu)
+        .updateCart(id, qu)
         .then((res) => {
           init();
         })
@@ -68,11 +62,11 @@ const Cart = () => {
     }
   };
 
-  const minusCart = (id,qu) => {
-   qu = qu -1;
+  const minusCart = (id, qu) => {
+    qu = qu - 1;
     if (qu < 1) {
       cartService
-        .deleteCart(id,qu)
+        .deleteCart(id, qu)
         .then((res) => {
           init();
           notify();
@@ -82,7 +76,7 @@ const Cart = () => {
         });
     } else {
       cartService
-        .updateCart(id,qu)
+        .updateCart(id, qu)
         .then((res) => {
           init();
         })
@@ -141,16 +135,11 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-               {cartList.map((item, ind) => (
-
-               
-                
-
-
+              {cartList.map((item, ind) => (
                 <tr key={item.id}>
                   <th scope="row">
                     <img
-                     // src={BASE_API_URL + "/" + item.book.img}
+                      // src={BASE_API_URL + "/" + item.book.img}
                       width="70px"
                       height="70px"
                     />
@@ -161,7 +150,9 @@ const Cart = () => {
                   <td>{item.quantity * item.product.productPrice}</td>
                   <td className="text-center">
                     <a
-                      onClick={() => plusCart(item.product.productId,item.quantity)}
+                      onClick={() =>
+                        plusCart(item.product.productId, item.quantity)
+                      }
                       className="text-dark"
                     >
                       <i class="fa-solid fa-plus"></i>
@@ -170,7 +161,9 @@ const Cart = () => {
                       {item.quantity}{" "}
                     </button>
                     <a
-                      onClick={() => minusCart(item.product.productId,item.quantity)}
+                      onClick={() =>
+                        minusCart(item.product.productId, item.quantity)
+                      }
                       className="text-dark ms-1"
                     >
                       <i class="fa-solid fa-minus"></i>
@@ -202,12 +195,9 @@ const Cart = () => {
                   {},{},{} <br />
                   Mobile No: {loginUser.mobNo}
                 </p>
-                 <Link
-                  className="fs-5 text-decoration-none"
-                  to="/editProfile"
-                >
+                <Link className="fs-5 text-decoration-none" to="/editProfile">
                   Change Address
-                </Link> 
+                </Link>
               </div>
             </div>
           </div>

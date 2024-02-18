@@ -33,7 +33,7 @@ public class ShoppingCartController {
         System.out.println(shoppingCart);
 
         // return the status accordingly, if user is not authorized
-        return shoppingCart != null ? new ResponseEntity<>(shoppingCart, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return shoppingCart != null ? new ResponseEntity<>(shoppingCart, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
 

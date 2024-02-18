@@ -11,17 +11,19 @@ const Home = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    
     // Fetch books data from the server
-    BookService.getAllBook()
-      .then((res) => {
-        console.log(res.data);
-        setBooks(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-      
+    try {
+      BookService.getAllBook()
+        .then((res) => {
+          console.log(res.data);
+          setBooks(res.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }, []); // Empty dependency array ensures useEffect runs only once
 
   return (

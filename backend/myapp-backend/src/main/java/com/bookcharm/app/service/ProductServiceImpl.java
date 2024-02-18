@@ -10,11 +10,16 @@ import com.bookcharm.app.model.Seller;
 import com.bookcharm.app.repository.CategoryRepository;
 import com.bookcharm.app.repository.ProductRepository;
 import com.bookcharm.app.repository.SellerRepository;
+import com.bookcharm.app.utils.FileUtils;
 import com.bookcharm.app.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.bookcharm.app.model.Product;
 import com.bookcharm.app.repository.ProductRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -85,7 +91,17 @@ public class ProductServiceImpl implements ProductService {
                 newProduct.setSeller(seller);
                 newProduct.setStock(addProductDto.getStock());
                 newProduct.setViewCount(0);
-//                newProduct.setProductImage(addProductDto.getProductImage());
+
+                MultipartFile productImage = addProductDto.getProductImage();
+                // store the image in folder if not nulland assign the stored image name to the product image
+                if(productImage != null){
+                    String savedProductImageNameInDir = FileUtils.storeImage("products",productImage);
+                    newProduct.setProductImage(savedProductImageNameInDir);
+                }
+
+
+
+
 
                 seller.addProduct(newProduct);
 

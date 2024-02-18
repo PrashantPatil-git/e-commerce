@@ -57,7 +57,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if(optionalShoppingCart.isPresent()) {
         	
         	ShoppingCart shoppingCart = optionalShoppingCart.get();
-        
+
+            System.out.println("from getShopping cart serice : " + shoppingCart);
         	return shoppingCart.getCartProducts();
         }
         return null;

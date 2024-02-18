@@ -37,13 +37,17 @@ public class ProductController {
         }
     }
     
-    
+
+
     //Seller will add Product
+    //Annotation @ModelAttribute is used when the requested content-type is multipart/form-data
+    //this annotation is used to map with the dto object in multipart/form-data
+    //unlike @RequestBody which map to dto object when the content-type is JSON or XML, it translates the JSON object into Java object (Unmarshalling using JACKSON)
+
+
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody AddProductDto addProductDto, @RequestHeader String Authorization) {
+    public ResponseEntity<?> addProduct(@ModelAttribute AddProductDto addProductDto, @RequestHeader String Authorization) {
 
-
-        System.out.println(addProductDto);
     	try {
             productService.addProduct(addProductDto, Authorization);
             return ResponseEntity.ok("Product Added SuccessFully");

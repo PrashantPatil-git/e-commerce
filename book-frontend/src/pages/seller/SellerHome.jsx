@@ -8,22 +8,27 @@ import { useNavigate } from "react-router-dom";
 
 import { toast, ToastContainer } from "react-toastify";
 
-
 import { RotatingLines } from "react-loader-spinner";
 
 const SellerHome = () => {
+  const productValues = {
+    productName: "book",
+    productDescription: "desc",
+    stock: 20,
+    author: "harshad",
+    productPrice: 500,
+    isbn: "24242 2424",
+    category: "BOOK",
+  };
 
-  
-const productValues = {
-  productName: "",
-  productDescription: "",
-  stock: "",
-  author: "",
-  productPrice: "",
-  productImage: "",
-  isbn: "",
-  category: "BOOK"
-};
+  //  productName: "",
+  //   productDescription: "",
+  //   stock: "",
+  //   author: "",
+  //   productPrice: "",
+  //   productImage: "",
+  //   isbn: "",
+  //   category: "BOOK",
 
   //storing the list of all books of seller
   const [books, setBooks] = useState([]);
@@ -32,12 +37,13 @@ const productValues = {
     new Book("", "", "", "", "", "", "", "", "", "", "")
   );
 
+  const [productImage, setProductImage] = useState(null);
+
   const navigate = useNavigate();
 
-   // state for spinner button
+  // state for spinner button
 
-   const [showSpinner, setShowSpinner] = useState(false);
-
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -45,7 +51,6 @@ const productValues = {
     setBooks(sellerService.getAllBooks());
   }, []);
 
-  
   const handleQuantityChange = (id, newQuantity) => {
     setBooks(
       books.map((book) =>
@@ -54,36 +59,57 @@ const productValues = {
     );
   };
 
+  const handleImageChange = (event) => {
+    setProductImage(event.target.files[0]);
+  };
+
   const handleDeleteBook = (id) => {
     setBooks(books.filter((book) => book.id !== id));
     sellerService.deleteBook(id);
   };
 
-
   const { values, errors, handleChange, handleSubmit, handleBlur, touched } =
-  useFormik({
-    initialValues: productValues,
+    useFormik({
+      initialValues: productValues,
 
-    onSubmit: (values, action) => {
-      setShowSpinner(true);
-      sellerService
-        .addProduct(values)
-        .then((res) => {
-          
-          notify(res);
-          notify("product added");
-          setShowSpinner(false);
-          setShowAddForm(true);
+      onSubmit: (values, action) => {
+        setShowSpinner(true);
 
-        })
-        .catch((error) => {
-          console.log(error);
+        const formData = new FormData();
 
-          notifyError(error.response.data);
-          setShowSpinner(false);
-        });
-    },
-  });
+        // append all the new book data in formData
+        // for (let key in values) {
+        //   formData.append(key, values[key]);
+        // }
+
+        formData.append("productName", values.productName);
+        formData.append("productDescription", values.productDescription);
+        formData.append("stock", values.stock);
+        formData.append("author", values.author);
+        formData.append("productPrice", values.productPrice);
+        formData.append("isbn", values.isbn);
+        formData.append("category", values.category);
+
+        // append the productImage in formData to send it to the server
+        formData.append("productImage", productImage);
+
+        sellerService
+          .addProduct(formData)
+          .then((res) => {
+            notify(res);
+            notify("product added");
+
+            setShowAddForm(true);
+          })
+          .catch((error) => {
+            console.log(error);
+
+            notifyError(error.response.data);
+          });
+
+        setShowSpinner(false);
+      },
+    });
 
   // toast buttons
   const notifyError = (msg) => {
@@ -111,7 +137,7 @@ const productValues = {
   };
 
   return (
-    <div className="container-fluid p-5">
+    <div className="mb-5 container-fluid p-5">
       <div className="row">
         <div className="col-md-8">
           <table className="table">
@@ -242,14 +268,18 @@ const productValues = {
                   type="file"
                   className="form-control"
                   name="productImage"
-                  onChange={handleChange}
+                  onChange={handleImageChange}
                   required
                 />
               </div>
 
-              <button className="btn btn-success" onClick={handleSubmit} >
-                Add Book
-              </button>
+              {showSpinner ? (
+                <RotatingLines />
+              ) : (
+                <button className="btn btn-success" onClick={handleSubmit}>
+                  Add Book
+                </button>
+              )}
             </div>
           )}
         </div>
