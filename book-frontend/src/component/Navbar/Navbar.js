@@ -42,7 +42,7 @@ const Navbar = () => {
     }else if(loginAdmin){
       dispatch(clearCurrentAdmin());
     }else if(loginSeller){
-      dispatch(clearCurrentSeller);
+      dispatch(clearCurrentSeller());
     }
     
     navigate("/");

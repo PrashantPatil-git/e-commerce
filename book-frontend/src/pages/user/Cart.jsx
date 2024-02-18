@@ -6,31 +6,16 @@ import { BASE_API_URL } from "../../common/constant";
 import { Link, useNavigate } from "react-router-dom";
 import orderService from "../../service/order.service";
 import { useSelector } from "react-redux";
+import userService from "../../service/user.service";
+import addressService from "../../service/address.service";
 
 const Cart = () => {
-  const [user, setUser] = useState({
-    id: "",
-    name: "",
-    email: "",
-    password: "",
-    mobNo: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
-  });
+  
 
   const loginUser = useSelector((u) => u.user);
 
-  user.id = loginUser.id;
-  user.name = loginUser.name;
-  user.email = loginUser.email;
-  user.mobNo = loginUser.mobNo;
-  user.address = loginUser.address;
-  user.city = loginUser.city;
-  user.state = loginUser.state;
-  user.pincode = loginUser.pincode;
-
+  
+  const [address,setAddress] = useState();
   const [cartList, setCartList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [pymtType, setPymtType] = useState("");
@@ -61,6 +46,10 @@ const Cart = () => {
     let cart = await cartService.getCart();
     console.log(cart);
     setCartList(cart.data);
+
+    let address = await addressService.getAddress();
+    console.log(address);
+    setAddress(address);
     
   };
 
@@ -208,10 +197,10 @@ const Cart = () => {
                 </p>
 
                 <p style={{ color: "black" }}>
-                  {user.name} <br />
-                  {user.address} <br />
-                  {user.city},{user.state},{user.pincode} <br />
-                  Mobile No: {user.mobNo}
+                  {loginUser.name} <br />
+                  {} <br />
+                  {},{},{} <br />
+                  Mobile No: {loginUser.mobNo}
                 </p>
                  <Link
                   className="fs-5 text-decoration-none"
