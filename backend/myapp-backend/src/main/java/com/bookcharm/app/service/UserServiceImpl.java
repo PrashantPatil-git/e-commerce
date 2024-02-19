@@ -95,6 +95,15 @@ public class UserServiceImpl implements UserService {
             // persist the user in db
             newUser = userRepository.save(newUser);
 
+
+            // login the current user using newUser id generated with and return token
+            LoginValidationDto loginValidationDto = new LoginValidationDto();
+            loginValidationDto.setUserId(newUser.getUserId());
+            loginValidationDto.setUserPassword(newUser.getPassWord());
+            loginValidationDto.setValidationPassword(userRegistrationDto.getPassWord());
+
+            String jwtToken = authenticationServiceWebClient.post().uri("/user/login").body(BodyInserters.fromValue(loginValidationDto)).retrieve().onStatus(HttpStatus::is4xxClientError,clientResponse ->  handleClientError(clientResponse)).bodyToMono(LoginResponse.class).map(LoginResponse::getToken).block();
+
             // send email to user
 
             // .subscribe() allows us to send non-blocking request to the another server
@@ -105,7 +114,7 @@ public class UserServiceImpl implements UserService {
             }
 
 
-            return new RegistrationResponse(newUser, registrationApiResponse.getToken());
+            return new RegistrationResponse(newUser, jwtToken);
 
         }
 
