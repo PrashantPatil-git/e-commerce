@@ -73,4 +73,10 @@ public class FileUtils {
         }
         return products;
     }
+
+    public static Product buildProductImage(Product product){
+        String encodedString = "data:image/jpeg;base64, " + Base64.getEncoder().encodeToString(FileUtils.retrieveImage("products", product.getProductImage()));
+        product.setProductImage(encodedString);
+        return product;
+    }
 }
