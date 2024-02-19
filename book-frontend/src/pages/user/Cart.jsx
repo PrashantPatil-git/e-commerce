@@ -104,6 +104,7 @@ const Cart = () => {
         });
       navigate("/orderSuccessful");
     } else {
+      alert(totalPrice);
       navigate("/PaymentForm/" + totalPrice);
     }
   };

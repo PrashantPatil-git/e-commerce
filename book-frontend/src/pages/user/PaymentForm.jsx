@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AlertLink } from 'react-bootstrap';
 
 const PaymentForm = () => {
-  const [amount, setAmount] = useState(100);
+
+  const [paymentAmount, setPaymentAmount] = useState();
   const [orderId, setOrderId] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  const {amount} = useParams();
 
   useEffect(() => {
     // Dynamically add Razorpay SDK script
@@ -15,10 +20,14 @@ const PaymentForm = () => {
     script.async = true;
     document.body.appendChild(script);
 
-    return () => {
+    alert(amount);
+    setPaymentAmount(amount)
+    return () => {+
       // Cleanup script on component unmount
       document.body.removeChild(script);
     };
+
+    
   }, []);
 
   const handlePayment = async () => {
@@ -37,7 +46,7 @@ const PaymentForm = () => {
       const razorpayOrderId = response.data;
       const options = {
         key: 'rzp_test_FQ4cpgtlLQsLA9', 
-        amount: amount * 100,
+        amount: paymentAmount * 100,
         currency: 'INR',
         order_id: razorpayOrderId,
         handler: function (response) {
@@ -76,7 +85,7 @@ const PaymentForm = () => {
       ) : (
         <div>
           <h2>Payment Details</h2>
-          <p>Amount: {amount} INR</p>
+          <p>Amount: {paymentAmount} INR</p>
           <button onClick={handlePayment}>Pay Now</button>
         </div>
       )}

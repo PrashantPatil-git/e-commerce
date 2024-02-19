@@ -66,7 +66,7 @@ function App() {
         <Route path="/sellerHome" element={<SellerHome />}></Route>
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
         <Route path="/orderSuccessful" element={<OrderSuccessful />}></Route>
-        <Route path="/PaymentForm" element={<PaymentForm />}></Route>
+        <Route path="/PaymentForm/:amount" element={<PaymentForm />}></Route>
 
 
         <Route
