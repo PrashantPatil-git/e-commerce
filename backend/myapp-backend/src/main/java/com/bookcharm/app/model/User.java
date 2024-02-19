@@ -40,6 +40,9 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private Set<Order> orders;
+    
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    private Address address;
 
 
     // Constructors

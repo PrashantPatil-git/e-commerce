@@ -22,6 +22,8 @@ exports.registerUser = async (req, res) => {
     // new user created , create jwt token and return
 
     const token = await createToken(registrationResult.user.userId);
+    console.log("this is newUser id "+registrationResult.user.userId);
+
 
     console.log(registrationResult.user);
 
