@@ -51,11 +51,11 @@ const Navbar = () => {
   };
 
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary p-3">
+    <div className="App-header">
+      <nav className="navbar navbar-expand-lg p-3 ">
         <div className="container-fluid">
-          <Link to="/" className="navbar-brand text-white">
-            <i className="fa-solid fa-book" /> Book Shop
+          <Link to="/" className="navbar-brand text-black">
+            <i className="fa-solid fa-book" /> Book Charm
           </Link>
           <button
             className="navbar-toggler"

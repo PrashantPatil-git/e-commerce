@@ -53,6 +53,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <div style={{ "margin-top": "100px" }}></div>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
@@ -67,7 +68,6 @@ function App() {
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
         <Route path="/orderSuccessful" element={<OrderSuccessful />}></Route>
         <Route path="/PaymentForm/:amount" element={<PaymentForm />}></Route>
-
 
         <Route
           path="/adminDashboard"

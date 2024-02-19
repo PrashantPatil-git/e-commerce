@@ -1,7 +1,9 @@
 const Footer = () => {
   return (
-    <div className="container-fluid bg-secondary p-1 text-white fixed-bottom">
-      <p className="fs-6 text-center">BookShop.com</p>
+    <div className="container-fluid p-1 text-black fixed-bottom">
+      <p className="fs-6 text-center">
+        Made with ❤️ by Team <strong>07</strong>
+      </p>
     </div>
   );
 };
