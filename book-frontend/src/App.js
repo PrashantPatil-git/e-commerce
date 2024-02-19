@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import { AdminLogin } from "./pages/admin/AdminLogin";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import PaymentForm from "./pages/user/PaymentForm";
 
 function App() {
   const loginUser = useSelector((state) => state.user);
@@ -65,6 +66,7 @@ function App() {
         <Route path="/sellerHome" element={<SellerHome />}></Route>
         <Route path="/sellerLogin" element={<SellerLogin />}></Route>
         <Route path="/orderSuccessful" element={<OrderSuccessful />}></Route>
+        <Route path="/PaymentForm" element={<PaymentForm />}></Route>
 
 
         <Route
