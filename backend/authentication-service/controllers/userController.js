@@ -19,14 +19,9 @@ exports.registerUser = async (req, res) => {
       return res.status(409).json({ message: registrationResult.message });
     }
 
-    // new user created , create jwt token and return
-
-    const token = await createToken(registrationResult.user.userId);
-
     console.log(registrationResult.user);
 
     return res.status(201).json({
-      token: token,
       userRegistrationDto: registrationResult.user,
     });
   } catch (error) {
