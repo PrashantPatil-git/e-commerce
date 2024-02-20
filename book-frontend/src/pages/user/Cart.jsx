@@ -10,7 +10,7 @@ import userService from "../../service/user.service";
 import addressService from "../../service/address.service";
 
 const Cart = () => {
-  const loginUser = useSelector((u) => u.user);
+  const user = useSelector((u) => u.user.user);
 
   const [address, setAddress] = useState();
   const [cartList, setCartList] = useState([]);
@@ -94,17 +94,19 @@ const Cart = () => {
     e.preventDefault();
 
     if (pymtType === "COD") {
-      orderService
-        .createOrder(pymtType)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      navigate("/orderSuccessful");
+      // orderService
+      //   .createOrder(pymtType)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      // navigate("/orderSuccessful");
+      alert("This service is under maintenance");
     } else {
-      navigate("/cardPayment/" + totalPrice);
+      alert(totalPrice);
+      navigate(`/PaymentForm/${totalPrice}`);
     }
   };
 
@@ -136,10 +138,10 @@ const Cart = () => {
             </thead>
             <tbody className="text-center">
               {cartList.map((item, ind) => (
-                <tr key={item.id}>
+                <tr key={item.productId}>
                   <th scope="row">
                     <img
-                      // src={BASE_API_URL + "/" + item.book.img}
+                      src={item.product.productImage}
                       width="70px"
                       height="70px"
                     />
@@ -185,16 +187,13 @@ const Cart = () => {
           <div className="col-md-12">
             <div className="card paint-card">
               <div className="card-body">
-                <p className="fs-6 text-Secondary text-center">
+                {/* <p className="fs-6 text-Secondary text-center">
                   Delivery Address
+                </p> */}
+                <p>
+                  Name : {user.firstName} {user.lastName}
                 </p>
-
-                <p style={{ color: "black" }}>
-                  {loginUser.name} <br />
-                  {} <br />
-                  {},{},{} <br />
-                  Mobile No: {loginUser.mobNo}
-                </p>
+                <p style={{ color: "black" }}>Mobile No: {user.mobileNumber}</p>
                 <Link className="fs-5 text-decoration-none" to="/editProfile">
                   Change Address
                 </Link>

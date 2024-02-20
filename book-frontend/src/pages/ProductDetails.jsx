@@ -3,13 +3,27 @@ import "../css/productDetails.css";
 
 import genericbook from "../generic-book.jpg";
 
+import { useSelector } from "react-redux/es/hooks/useSelector";
+
+import { useNavigate } from "react-router-dom";
+
 const ProductDetails = ({ product, addToCart }) => {
+  const navigate = useNavigate();
+
+  const user = useSelector((u) => u.user.user);
+
   const handleAddToCart = (productId, quantity) => {
     alert(productId, quantity);
     addToCart(productId, quantity);
   };
 
-  const handlePlaceOrder = () => {};
+  const handlePlaceOrder = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      //
+    }
+  };
 
   return (
     <div className="product-card">
@@ -50,7 +64,7 @@ const ProductDetails = ({ product, addToCart }) => {
             </button>
             <button
               className="btn btn-success m-2"
-              onClick={() => handleAddToCart()}
+              onClick={() => handlePlaceOrder()}
             >
               Place Order
             </button>

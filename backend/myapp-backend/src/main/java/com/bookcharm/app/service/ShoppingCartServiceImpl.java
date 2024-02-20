@@ -9,6 +9,7 @@ import com.bookcharm.app.model.ShoppingCart;
 import com.bookcharm.app.model.ShoppingCartProduct;
 import com.bookcharm.app.repository.ProductRepository;
 import com.bookcharm.app.repository.ShoppingCartRepository;
+import com.bookcharm.app.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -59,6 +60,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         	ShoppingCart shoppingCart = optionalShoppingCart.get();
 
             System.out.println("from getShopping cart serice : " + shoppingCart);
+
+            Set<ShoppingCartProduct> setShoppingCartProduct = new HashSet<>();
+
+            // build the product images for shopping cart products
+            shoppingCart.getCartProducts().forEach(shoppingCartProduct  -> {
+                shoppingCartProduct.setProduct(FileUtils.buildProductImage(shoppingCartProduct.getProduct()));
+            });
+
         	return shoppingCart.getCartProducts();
         }
         return null;

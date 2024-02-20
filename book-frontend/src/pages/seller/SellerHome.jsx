@@ -14,13 +14,13 @@ import genericbook from "../../generic-book.jpg";
 
 const SellerHome = () => {
   const productValues = {
-    productName: "book",
-    productDescription: "desc",
-    stock: 20,
-    author: "harshad",
-    productPrice: 500,
-    isbn: "24242 2424",
-    category: "BOOK",
+    productName: "",
+    productDescription: "",
+    stock: "",
+    author: "",
+    productPrice: "",
+    isbn: "",
+    category: "",
   };
 
   //  productName: "",
@@ -69,7 +69,7 @@ const SellerHome = () => {
   const handleQuantityChange = (id, newQuantity) => {
     setBooks(
       books.map((book) =>
-        book.id === id ? { ...book, quantity: newQuantity } : book
+        book.productId === id ? { ...book, quantity: newQuantity } : book
       )
     );
   };
@@ -163,6 +163,7 @@ const SellerHome = () => {
                 <th scope="col">Price</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Action</th>
+                <th scope="col">Image</th>
               </tr>
             </thead>
             <tbody className="text-center">
@@ -198,14 +199,16 @@ const SellerHome = () => {
                       Delete
                     </button>
                   </td>
-                  <img
-                    src={
-                      book.productImage
-                        ? `data:image/jpeg;base64,${book.productImage}`
-                        : genericbook
-                    }
-                    height="100px"
-                  />
+                  <td>
+                    <img
+                      src={
+                        book.productImage
+                          ? `data:image/jpeg;base64,${book.productImage}`
+                          : genericbook
+                      }
+                      height="100px"
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

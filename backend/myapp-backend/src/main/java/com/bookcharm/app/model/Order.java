@@ -40,13 +40,6 @@ public class Order {
     @JoinColumn(name = "quantity")
     private int quantity;
 
-    // Constructors
-   
-
-    // Getters and Setters
-    public Long getOrderId() {
-        return orderId;
-    }
 
     public Order() {
 		super();
@@ -64,6 +57,11 @@ public class Order {
 		this.orderDate = orderDate;
 		this.quantity = quantity;
 	}
+
+    // Getters and Setters
+    public Long getOrderId() {
+        return orderId;
+    }
 
 	public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -124,7 +122,5 @@ public class Order {
 				+ ", quantity=" + quantity + "]";
 	}
     
-
-    // Other methods, if needed
 
 }

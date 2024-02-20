@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-        return optionalProduct.orElse(null);
+        return FileUtils.buildProductImage(optionalProduct.get());
     }
 
     @Override
@@ -96,15 +96,11 @@ public class ProductServiceImpl implements ProductService {
                 newProduct.setViewCount(0);
 
                 MultipartFile productImage = addProductDto.getProductImage();
-                // store the image in folder if not nulland assign the stored image name to the product image
+                // store the image in folder if not null and assign the stored image name to the product image
                 if(productImage != null){
                     String savedProductImageNameInDir = FileUtils.storeImage("products",productImage);
                     newProduct.setProductImage(savedProductImageNameInDir);
                 }
-
-
-
-
 
                 seller.addProduct(newProduct);
 

@@ -28,7 +28,6 @@ exports.registerUser = async (req, res) => {
     console.log(registrationResult.user);
 
     return res.status(201).json({
-      token: token,
       userRegistrationDto: registrationResult.user,
     });
   } catch (error) {
