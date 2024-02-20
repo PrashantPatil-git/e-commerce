@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import userService from "../../service/user.service";
 import addressService from "../../service/address.service";
 
+
+
 const Cart = () => {
   const user = useSelector((u) => u.user.user);
 
@@ -158,6 +160,7 @@ const Cart = () => {
                       className="text-dark"
                     >
                       <i class="fa-solid fa-plus"></i>
+                      Plus
                     </a>
                     <button className="btn btn-sm btn-dark ms-2 me-2">
                       {item.quantity}{" "}
@@ -169,6 +172,7 @@ const Cart = () => {
                       className="text-dark ms-1"
                     >
                       <i class="fa-solid fa-minus"></i>
+                      minus
                     </a>
                   </td>
                 </tr>
